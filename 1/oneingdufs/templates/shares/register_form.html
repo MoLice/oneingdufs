@@ -1,0 +1,23 @@
+<form class="form-horizontal" method="post" action="/home/register/">
+  {# form fields #}
+  {% for fields in form %}
+  <div class="control-group{% if fields.errors.as_text %} error{% endif %}">
+    <label class="control-label" for="{{fields.auto_id}}">{{fields.label}}</label>
+    <div class="controls">
+      {{fields}}
+      <p class="help-block">
+      {% if fields.errors.as_text %}
+      {{fields.errors.as_text}}
+      {% else %}
+      {{fields.help_text}}
+      {% endif %}
+      </p>
+    </div>
+  </div>
+  {% endfor %}
+  {# form-actions #}
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">注册</button>
+    <a class="btn" href="/home/login/">登录</a>
+  </div>
+</form>

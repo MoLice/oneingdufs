@@ -1,0 +1,12 @@
+{% extends 'layouts/application.html' %}
+{# /home/register 注册页面 #}
+
+{% block title %}注册{% endblock %}
+
+{% block body %}
+{% if user.is_anonymous %}
+  {% include 'shares/register_form.html' %}
+{% else %}
+  <p>已作为<a href="/home/" title="进入用户中心">{{ user }}</a>登录，若要注册请先<a href="/home/logout/" title="注销">注销</a></p>
+{% endif %}
+{% endblock %}

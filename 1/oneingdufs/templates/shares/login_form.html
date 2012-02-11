@@ -1,0 +1,16 @@
+<form id="login-form" method="post" action="/home/login/">
+  {% for fields in form %}
+    {% ifequal fields.label '记住我' %}
+      <label class="checkbox">
+        {{fields}}
+        {{fields.label}}
+      </label>
+    {% else %}
+      {{fields.label_tag}}
+      {{fields}}
+    {% endifequal %}
+  {% endfor %}
+  {{form.errors}}
+  <button class="btn btn-primary" type="submit">登录</button>
+  <a href="/home/register/" style="vertical-align:middle;">注册</a>
+</form>

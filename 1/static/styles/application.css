@@ -1,0 +1,7 @@
+/**
+ * 全站样式
+ * @author MoLice<sf.molice@gmail.com>
+ */
+a.btn {
+  vertical-align: middle; /* 修复button.btn和a.btn同行时的垂直对齐 */
+}
