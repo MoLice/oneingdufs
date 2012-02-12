@@ -1,0 +1,19 @@
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collaspe" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="/" title="首页">One in GDUFS</a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li class="{% ifequal request.path '/' %}active{% endifequal %}"><a href="/">首页</a></li>
+          <li class="{% ifequal request.path '/home/' %}active{% endifequal %}"><a href="/home/">用户中心</a></li>
+          <li class="{% ifequal request.path '/card/' %}active{% endifequal %}"><a href="/card/">校园卡</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

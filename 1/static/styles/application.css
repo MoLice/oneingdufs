@@ -8,10 +8,12 @@
  *   |- login-form
  *   |- dialog
  * |- index 首页样式
+ * |- home 用户中心
  * |- register 注册页面
  * |- login 登录页面
  */
 
+body {padding-top:80px;}
 /* 修复button.btn和a.btn同行时的垂直对齐 */
 a.btn {vertical-align: middle;}
 .nearbybtn {vertical-align:middle;}
@@ -52,13 +54,14 @@ a.btn {vertical-align: middle;}
 }
 
 /** index 首页样式 */
-#index .wrapper {width: 220px;padding: 100px 0 0 50px;}
-#index .wrapper h1 {margin-bottom: 20px;text-align: center;}
+#index .wrapper {width:220px;padding:90px 0 0 50px;}
+#index .wrapper h1 {margin-bottom:20px;text-align:center;}
+
+/** home 用户中心 */
+#home .well {padding:8px 0;}
 
 /** register 注册页面 */
-#register .container {padding-top:20px;}
 #register .itcanchange {margin-top:38px;}
 
 /** login 登录页面 */
-#login .container {padding-top:100px;}
 #login .dialog .wrapper {background:url('/static/images/gdufs_logo.png') 242px 80px no-repeat;}

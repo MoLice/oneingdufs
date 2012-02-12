@@ -11,7 +11,7 @@ PRO_PATH = os.path.dirname(__file__) # 项目的绝对路径
 LOGIN_URL = '/home/login/'
 LOGOUT_URL = '/home/logout/'
 # 登录成功且url不带有next查询字符串时的跳转url
-LOGIN_REDIRECT_URL = '/home/'
+LOGIN_REDIRECT_URL = '/'
 
 ################
 # LOCAL or SAE #
@@ -108,6 +108,7 @@ TEMPLATE_DIRS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.auth',
+    'django.core.context_processors.request',
     #'django.core.context_processors.debug',
     #'django.core.context_processors.i18n',
     #'django.core.context_processors.media',

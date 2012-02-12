@@ -1,8 +1,8 @@
-{% extends 'layouts/application.html' %}
+{% extends 'layouts/home.html' %}
 {# /home/ 用户中心首页 #}
 
 {% block title %}用户中心{% endblock %}
 
-{% block body %}
-<p>欢迎你，{{user.username}}，<a href="/home/logout/" title="退出登录">退出</a></p>
+{% block content %}
+<p>这是用户中心首页</p>
 {% endblock %}

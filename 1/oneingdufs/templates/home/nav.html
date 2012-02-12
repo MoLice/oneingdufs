@@ -1,0 +1,15 @@
+<nav class="well">
+  <ul class="nav nav-list">
+    <li class="nav-header">个人中心</li>
+    <li class="{% ifequal request.path '/home/' %}active{% endifequal %}">
+      <a href="/home/"><i class="{% ifequal request.path '/home/' %}icon-white {% endifequal %}icon-home"></i>用户中心</a>
+    </li>
+    <li class="{% ifequal request.path '/home/user/' %}active{% endifequal %}">
+      <a href="/home/user/"><i class="{% ifequal request.path '/home/user/' %}icon-white {% endifequal %}icon-user"></i>个人信息</a>
+    </li>
+    <li class="{% ifequal request.path '/home/settings/' %}active{% endifequal %}">
+      <a href="/home/settings/"><i class="{% ifequal request.path '/home/settings/' %}icon-white {% endifequal %}icon-cog"></i>账号设置</a>
+    </li>
+    <li><a href="/home/logout/"><i class="icon-off"></i>退出登录</a></li>
+  </ul>
+</nav>

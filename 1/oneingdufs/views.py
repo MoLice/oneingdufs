@@ -31,7 +31,9 @@ def index(request):
   else:
     # 未登录
     template_val['form'] = Login_form()
-    return render_to_response('globals/index_login.html', template_val)
+    return render_to_response('globals/index_login.html',
+        template_val,
+        context_instance=RequestContext(request))
 
 def about(request):
   """关于

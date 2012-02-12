@@ -1,0 +1,14 @@
+{% extends 'layouts/application.html' %}
+{# layouts/home.html /home/基础模板 #}
+
+{% block body_attr %}id="home" {% block home_body_attr %}{# home_body_attr #}{% endblock %}{% endblock %}
+{% block body %}
+<div class="row">
+  <div class="span2">
+    {% include 'home/nav.html' %}
+  </div>
+  <div class="span10">
+    {% block content %}{# content #}{% endblock %}
+  </div>
+</div>
+{% endblock %}

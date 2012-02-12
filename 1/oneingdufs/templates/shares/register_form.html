@@ -17,6 +17,7 @@
     </div>
   </div>
   {% endfor %}
+  <input type="hidden" name="redirect_to" value="{{request.get_full_path}}" />
   {# form-actions #}
   <div class="form-actions">
     <button class="btn btn-primary" type="submit">注册</button>

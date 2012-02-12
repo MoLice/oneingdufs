@@ -11,4 +11,6 @@ urlpatterns = patterns('',
   url(r'^register/$', register),
   url(r'^login/$', login),
   url(r'^logout/$', logout),
+  url(r'^user/$', user),
+  url(r'^settings/$', settings),
 )

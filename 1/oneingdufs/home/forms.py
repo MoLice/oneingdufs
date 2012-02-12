@@ -17,6 +17,7 @@ class Login_form(AuthenticationForm):
         'maxlength': '20',
         'pattern': r'^(\w|\d){4,20}$',
         'required': 'required',
+        'tabindex': '1',
       }))
   password = forms.CharField(label='密码',
       widget=forms.PasswordInput(attrs={
@@ -32,6 +33,7 @@ class Register_form(forms.Form):
         'maxlength': '20',
         'pattern': r'^(\w|\d){4,20}$',
         'required': 'required',
+        'tabindex': '1',
       }))
   # 密码
   password = forms.CharField(label='密码', help_text='请设置你在One in GDUFS的密码，至少6位',

@@ -6,6 +6,8 @@
 |- register 注册
 |- login 登录
 |- logout 注销
+|- user 个人信息
+|- settings 账号设置
 """
 
 import urlparse
@@ -25,7 +27,7 @@ from oneingdufs.settings import LOGIN_REDIRECT_URL
 # 导入form表单
 from oneingdufs.home.forms import *
 # 导入常用函数集合
-from oneingdufs.functions import create_user
+from oneingdufs.functions import create_user, getRedirect
 # 导入模型
 from oneingdufs.personalinfo.models import AtSchool
 
@@ -59,10 +61,7 @@ def register(request):
       atschool.save()
       # login this user
       auth_login(request, authenticate(username=user.username, password=data['password']))
-      # url来源为/home/register/则转向到首页，否则转向到来源页
-      if 'HTTP_REFERER' in request.META and urlparse.urlparse(request.META['HTTP_REFERER'])[2] == '/home/register/':
-        return HttpResponseRedirect('/')
-      return HttpResponseRedirect(request.META.get('HTTP_REFERER', LOGIN_REDIRECT_URL))
+      return HttpResponseRedirect(getRedirect(request))
     else:
       # 验证失败，修改表单
       template_val['form'] = register_form
@@ -76,23 +75,17 @@ def login(request):
 
   if request.method == "GET":
     if request.user.is_authenticated():
-      return HttpResponseRedirect('/home/')
+      return HttpResponseRedirect(getRedirect(request))
     template_val['form'] = Login_form()
     return render_to_response('home/login.html',
         template_val,
         context_instance=RequestContext(request))
   else:
-    # 从url获取登录成功后要重定向的路径，默认值为settings.LOGIN_REDIRECT_URL
-    redirect_to = request.REQUEST.get('next', LOGIN_REDIRECT_URL)
     form = Login_form(data=request.POST)
     if form.is_valid():
-      hostname = urlparse.urlparse(redirect_to)[1]
-      if hostname and hostname != request.get_host():
-        # next字段转向非同域url
-        redirect_to = LOGIN_REDIRECT_URL
       # login the user
       auth_login(request, form.get_user())
-      return HttpResponseRedirect(redirect_to)
+      return HttpResponseRedirect(getRedirect(request))
     else:
       template_val['form'] = form
       return render_to_response('home/login.html',
@@ -102,4 +95,20 @@ def login(request):
 def logout(request):
   """/home/logout/ 注销"""
   auth_logout(request)
-  return HttpResponseRedirect(request.META.get('HTTP_REFERER', LOGIN_REDIRECT_URL))
+  return HttpResponseRedirect(getRedirect(request))
+
+@login_required
+def user(request):
+  """/home/user/ 个人信息"""
+  template_val = {}
+  return render_to_response('home/user.html',
+      template_val,
+      context_instance=RequestContext(request))
+
+@login_required
+def settings(request):
+  """/home/settings/ 账号设置"""
+  template_val = {}
+  return render_to_response('home/settings.html',
+      template_val,
+      context_instance=RequestContext(request))
