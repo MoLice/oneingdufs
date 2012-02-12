@@ -1,4 +1,10 @@
 <form id="login-form" method="post" action="/home/login/">
+  {% if form.errors %}
+  <div class="alert alert-error">
+    <a class="close" data-dismiss="alert" href="#">&times;</a>
+    用户名或密码不正确
+  </div>
+  {% endif %}
   {% for fields in form %}
     {% ifequal fields.label '记住我' %}
       <label class="checkbox">
@@ -10,7 +16,6 @@
       {{fields}}
     {% endifequal %}
   {% endfor %}
-  {{form.errors}}
   <input type="hidden" name="redirect_to" value="{{request.get_full_path}}" />
   <div class="action">
     <button class="btn btn-primary" type="submit">登录</button>
