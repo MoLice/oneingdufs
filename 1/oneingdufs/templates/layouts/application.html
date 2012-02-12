@@ -2,19 +2,17 @@
 <html lang="zh-cn">
 <head>
   <title>{% block title %}{% endblock %} - One in GDUFS</title>
-  <meta charset="utf-8" />
   <meta name="description" content="{% block description %}{% endblock %}" />
-  <meta name="author" content="MoLice" />
-  <link rel="stylesheet" type="text/css" href="/static/styles/bootstrap.min.css" />
-  <link rel="stylesheet" type="text/css" href="/static/styles/bootstrap-responsive.min.css" />
-  <link rel="stylesheet" type="text/css" href="/static/styles/application.css" />
-  {% block head %}{% endblock %}
+  {% include 'shares/head.html' %}
+  {% block head %}{# head #}{% endblock %}
 </head>
-<body>
+<body {% block body_attr %}{# body_attr #}{% endblock %}>
   <div class="container">
-  {% block body %}{% endblock %}
+    {% block body %}{# body #}{% endblock %}
+    {% block footer %}{# footer #}{% include 'shares/footer.html' %}{% endblock %}
   </div>
   <script src='/static/javascripts/jquery.js'></script>
   <script src='/static/javascripts/bootstrap.min.js'></script>
+  {% block script %}{# javascripts #}{% endblock %}
 </body>
 </html>

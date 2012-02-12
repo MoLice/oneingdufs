@@ -2,7 +2,15 @@
 {# /home/login/ 登录页面 #}
 
 {% block title %}登录{% endblock %}
+
+{% block body_attr %}id="login"{% endblock %}
 {% block body %}
-<h1>One in GDUFS</h1>
-{% include 'shares/login_form.html' %}
+  <div class="row">
+    <div class="dialog span4 offset1">
+      <h1 class="title">登录</h1>
+      <div class="wrapper">
+      {% include 'shares/login_form.html' %}
+      </div>
+    </div>
+  </div>
 {% endblock %}

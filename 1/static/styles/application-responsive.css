@@ -1,0 +1,32 @@
+/**
+ * 全站响应式样式代码
+ * @author MoLice<sf.molice@gmail.com>
+ * |- max-width: 480px | black
+ * |- max-width: 768px | red
+ * |- min-width: 768px and max-width: 980px | blue
+ * |- max-width: 980px
+ * |- min-width: 980px | green
+ * |- min-width: 1200px | pink
+ */
+/*
+@media (max-width: 480px) {.container {background:black;}}
+@media (max-width: 768px) {.container {background:red;}}
+@media (min-width: 768px) and (max-width: 980px) {.container {background:blue;}}
+@media (max-width: 980px) {}
+@media (min-width: 980px) {.container {background:green;}}
+@media (min-width: 1200px) {.container {background:pink;}}
+*/
+@media (max-width: 480px) {
+  #register .container {padding-top:0;}
+}
+@media (max-width: 768px) {
+  #register .itcanchange {margin-top:0;}
+}
+@media (min-width: 768px) and (max-width: 980px) {
+}
+@media (max-width: 980px) {
+}
+@media (min-width: 980px) {
+}
+@media (min-width: 1200px) {
+}

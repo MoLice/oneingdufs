@@ -1,7 +1,62 @@
 /**
  * 全站样式
  * @author MoLice<sf.molice@gmail.com>
+ * |- global
+ *   |- color
+ *   |- header
+ *   |- footer
+ * |- index 首页样式
+ * |- register 注册页面
  */
+
+/* 修复button.btn和a.btn同行时的垂直对齐 */
 a.btn {
-  vertical-align: middle; /* 修复button.btn和a.btn同行时的垂直对齐 */
+  vertical-align: middle;
 }
+/** global */
+/* color */
+.color-blue1 {color:#0088cc;}
+.color-blue2 {color:#3a87ad;}
+.color-green {color:#468847;}
+.color-grey {color:#999;}
+.color-white {color:#e5e5e5;}
+.color-red {color:#b94a48;}
+.color-yellow1 {color:#c09853;}
+.color-yellow2 {color:#f89406;}
+/* header */
+.sec-header {font-size: 14px;color: #999;}
+/* footer */
+.footer {margin-top:45px;padding:35px 0 36px;border-top:1px solid #e5e5e5;}
+.footer .link-list>li {float:left;margin-right:40px;}
+.footer .aside {text-align:right;}
+/* login-form */
+#login-form .action {margin-top:20px;}
+/* dialog */
+.dialog .title {
+  font-size:14px;
+  line-height:31px;
+  text-align:center;
+  text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);
+  color:white;
+  border:1px solid #ccc;
+  border-radius:4px 4px 0 0;
+  box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+  background-color:#006dcc;background-image:-moz-linear-gradient(top, #0088cc, #0044cc);background-image:-ms-linear-gradient(top, #0088cc, #0044cc);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));background-image:-webkit-linear-gradient(top, #0088cc, #0044cc);background-image:-o-linear-gradient(top, #0088cc, #0044cc);background-image:linear-gradient(top, #0088cc, #0044cc);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);border-color:#0044cc #0044cc #002a80;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.dialog .wrapper {
+  padding:16px 20px 0;
+  border:1px solid #ccc;
+  border-radius:0 0 4px 4px;
+}
+
+/** index 首页样式 */
+#index .wrapper {width: 220px;padding: 100px 0 0 50px;}
+#index .wrapper h1 {margin-bottom: 20px;text-align: center;}
+
+/** register 注册页面 */
+#register .container {padding-top:20px;}
+#register .itcanchange {margin-top:38px;}
+
+/** login 登录页面 */
+#login .container {padding-top:20px;}
+#login .dialog .wrapper {background:url('/static/images/gdufs_logo.png') 242px 80px no-repeat;}

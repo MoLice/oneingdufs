@@ -1,4 +1,5 @@
 # coding=utf-8
+"""oneingdufs.urls 全局urls"""
 
 from django.conf.urls.defaults import patterns, include, url
 # project import

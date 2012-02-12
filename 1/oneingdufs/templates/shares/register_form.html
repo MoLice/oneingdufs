@@ -1,4 +1,6 @@
 <form class="form-horizontal" method="post" action="/home/register/">
+  <fieldset>
+    <legend>One in GDUFS<span class="sec-header"> - 掌中广外</span></legend>
   {# form fields #}
   {% for fields in form %}
   <div class="control-group{% if fields.errors.as_text %} error{% endif %}">
@@ -20,4 +22,5 @@
     <button class="btn btn-primary" type="submit">注册</button>
     <a class="btn" href="/home/login/">登录</a>
   </div>
+  </fieldset>
 </form>
