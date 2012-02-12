@@ -1,0 +1,18 @@
+{% extends 'layouts/application.html' %}
+{# / 全站首页，未登录时调用 #}
+
+{% block title %}首页{% endblock %}
+{% block description %}欢迎来到One in GDUFS首页{% endblock %}
+
+{% block body_attr %}id="index"{% endblock %}
+{% block body %}
+  {# 未登录，显示登录表单 #}
+  <div class="row">
+    <div class="wrapper span3 offset4">
+      <h1>One in GDUFS</h1>
+      {% include 'shares/login_form.html' %}
+    </div>
+  </div>
+{% endblock %}
+{# 去除footer #}
+{% block footer %}{% endblock %}

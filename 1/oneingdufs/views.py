@@ -25,11 +25,16 @@ def index(request):
 
   if request.user.is_authenticated():
     # 已登录
-    pass
+    return render_to_response('globals/index.html',
+        template_val,
+        context_instance=RequestContext(request))
   else:
     # 未登录
     template_val['form'] = Login_form()
+    return render_to_response('globals/index_login.html', template_val)
 
-  return render_to_response('globals/index.html',
-      template_val,
-      context_instance=RequestContext(request))
+def about(request):
+  """关于
+  包括本站、制作人员等
+  """
+  return render_to_response('globals/about.html')

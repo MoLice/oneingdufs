@@ -5,14 +5,16 @@
  *   |- color
  *   |- header
  *   |- footer
+ *   |- login-form
+ *   |- dialog
  * |- index 首页样式
  * |- register 注册页面
+ * |- login 登录页面
  */
 
 /* 修复button.btn和a.btn同行时的垂直对齐 */
-a.btn {
-  vertical-align: middle;
-}
+a.btn {vertical-align: middle;}
+.nearbybtn {vertical-align:middle;}
 /** global */
 /* color */
 .color-blue1 {color:#0088cc;}
@@ -58,5 +60,5 @@ a.btn {
 #register .itcanchange {margin-top:38px;}
 
 /** login 登录页面 */
-#login .container {padding-top:20px;}
+#login .container {padding-top:100px;}
 #login .dialog .wrapper {background:url('/static/images/gdufs_logo.png') 242px 80px no-repeat;}

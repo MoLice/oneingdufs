@@ -62,7 +62,7 @@ def register(request):
       # url来源为/home/register/则转向到首页，否则转向到来源页
       if 'HTTP_REFERER' in request.META and urlparse.urlparse(request.META['HTTP_REFERER'])[2] == '/home/register/':
         return HttpResponseRedirect('/')
-      return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+      return HttpResponseRedirect(request.META.get('HTTP_REFERER', LOGIN_REDIRECT_URL))
     else:
       # 验证失败，修改表单
       template_val['form'] = register_form
@@ -102,4 +102,4 @@ def login(request):
 def logout(request):
   """/home/logout/ 注销"""
   auth_logout(request)
-  return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+  return HttpResponseRedirect(request.META.get('HTTP_REFERER', LOGIN_REDIRECT_URL))

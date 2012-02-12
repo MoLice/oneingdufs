@@ -13,6 +13,7 @@ from oneingdufs.home.forms import *
 # globals.views
 urlpatterns = patterns('',
     url(r'^$', 'oneingdufs.views.index'),
+    url(r'^about/$', 'oneingdufs.views.about'),
 )
 
 # apps views
