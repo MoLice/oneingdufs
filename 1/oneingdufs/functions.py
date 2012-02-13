@@ -18,7 +18,7 @@ from oneingdufs import settings
 # @param {String} password 密码，必须
 # @param **kwargs email|is_staff|is_active|is_superuser|telnum|cornet|qq|state
 # @return {User} 返回创建成功的用户对象
-def create_user(username, password, **kwargs):
+def create_user(username, password, studentId, **kwargs):
   now = datetime.datetime.now()
 
   # 将参数覆盖默认值
@@ -27,6 +27,7 @@ def create_user(username, password, **kwargs):
     'is_staff': False,
     'is_active': True,
     'is_superuser': False,
+    'truename': None,
     'telnum': None,
     'cornet': None,
     'qq': None,
@@ -45,8 +46,9 @@ def create_user(username, password, **kwargs):
     opts['email'] = '@'.join([email_name, domain_part.lower()])
 
   # 创建User实例
-  user = User(username=username, email=opts['email'], is_staff=opts['is_staff'],
-              is_active=opts['is_active'], is_superuser=opts['is_superuser'],
+  user = User(username=username, studentId=studentId, email=opts['email'],
+              is_staff=opts['is_staff'], is_active=opts['is_active'],
+              is_superuser=opts['is_superuser'], truename=opts['truename'],
               telnum=opts['telnum'], cornet=opts['cornet'], qq=opts['qq'],
               state=opts['state'], last_login=now, date_joined=now)
   # 设置密码
@@ -72,9 +74,9 @@ def getRedirect(request):
           return referer
         else:
           # 路径名一致则检查next查询字符串
-          query_next = re.match(r'next=(?P<next>[^&]*)', parse_result[4]).group('next')
-          if query_next:
-            return query_next
+          query_next = re.match(r'next=(?P<next>[^&]*)', parse_result[4])
+          if query_next and query_next.group('next'):
+            return query_next.group('next')
     else:
       if parse_result[2] != request.path:
         # 若不存在域名则只需判断路径名是否和当前路径不一致

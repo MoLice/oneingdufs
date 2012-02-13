@@ -1,0 +1,40 @@
+<form class="form-horizontal" method="post" action="/home/home_form/">
+  <fieldset>
+    <legend>基本信息</legend>
+    {# 昵称 #}
+    <div class="control-group">
+      <label class="control-label">昵称</label>
+      <div class="controls">
+        <span class="uneditable-input text-like-input">{{user.username}}</span>
+      </div>
+    </div>
+    {# 关联学号 #}
+    <div class="control-group">
+      <label class="control-label">关联学号</label>
+      <div class="controls">
+        <span class="uneditable-input text-like-input">{{user.studentId}}</span>
+      </div>
+    </div>
+    {# form fields #}
+    {% for fields in form %}
+    <div class="control-group{% if fields.errors.as_text %} error{% endif %}">
+      <label class="control-label" for="{{fields.auto_id}}">{{fields.label}}</label>
+      <div class="controls">
+        {{fields}}
+        <p class="help-block">
+        {% if fields.errors.as_text %}
+        {{fields.errors.as_text}}
+        {% else %}
+        {{fields.help_text}}
+        {% endif %}
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+    {# form-actions #}
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit" tabindex="6">保存</button>
+      <button class="btn" type="reset" tabindex="7">取消</button>
+    </div>
+  </fieldset>
+</form>

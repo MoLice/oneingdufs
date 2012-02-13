@@ -1,27 +1,27 @@
 <form class="form-horizontal" method="post" action="/home/register/">
   <fieldset>
     <legend>One in GDUFS<span class="sec-header"> - 掌中广外</span></legend>
-  {# form fields #}
-  {% for fields in form %}
-  <div class="control-group{% if fields.errors.as_text %} error{% endif %}">
-    <label class="control-label" for="{{fields.auto_id}}">{{fields.label}}</label>
-    <div class="controls">
-      {{fields}}
-      <p class="help-block">
-      {% if fields.errors.as_text %}
-      {{fields.errors.as_text}}
-      {% else %}
-      {{fields.help_text}}
-      {% endif %}
-      </p>
+    {# form fields #}
+    {% for fields in form %}
+    <div class="control-group{% if fields.errors.as_text %} error{% endif %}">
+      <label class="control-label" for="{{fields.auto_id}}">{{fields.label}}</label>
+      <div class="controls">
+        {{fields}}
+        <p class="help-block">
+        {% if fields.errors.as_text %}
+        {{fields.errors.as_text}}
+        {% else %}
+        {{fields.help_text}}
+        {% endif %}
+        </p>
+      </div>
     </div>
-  </div>
-  {% endfor %}
-  <input type="hidden" name="redirect_to" value="{{request.get_full_path}}" />
-  {# form-actions #}
-  <div class="form-actions">
-    <button class="btn btn-primary" type="submit">注册</button>
-    <a class="nearbybtn" href="/home/login/" title="已拥有账号？点此登录">登录</a>
-  </div>
+    {% endfor %}
+    <input type="hidden" name="redirect_to" value="{{request.get_full_path}}" />
+    {# form-actions #}
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit" tabindex="6">注册</button>
+      <a class="nearbybtn" href="/home/login/" title="已拥有账号？点此登录" tabindex="7">登录</a>
+    </div>
   </fieldset>
 </form>

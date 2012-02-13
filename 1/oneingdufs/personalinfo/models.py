@@ -18,17 +18,21 @@ class Student(Profile):
   
   扩展自django User
   """
+  # 学号
+  studentId = models.CharField(max_length=11, unique=True)
+  # 真名
+  truename = models.CharField(max_length=20, null=True) 
   # 手机
-  telnum = models.CharField(max_length=11, null=True)
+  telnum = models.CharField(max_length=11, null=True, unique=True)
   # 短号
-  cornet = models.CharField(max_length=10, null=True)
+  cornet = models.CharField(max_length=10, null=True, unique=True)
   # qq
-  qq = models.CharField(max_length=12, null=True)
+  qq = models.CharField(max_length=12, null=True, unique=True)
   # 状态
   state = models.CharField(max_length=10, null=True)
 
   def __str__(self):
-    return self.studentId
+    return self.truename
 
 class AtSchool(models.Model):
   """在校的个人信息，行政档案方面的"""
@@ -39,12 +43,8 @@ class AtSchool(models.Model):
   )
   # 用户，与用户表关联
   userId = models.ForeignKey(User)
-  # 学号
-  studentId = models.CharField(max_length=11, unique=True)
   # 数字广外密码
   mygdufsPwd = models.CharField(max_length=20)
-  # 真名
-  truename = models.CharField(max_length=20, null=True)
   # 出生年月
   born = models.DateField(null=True)
   # 入学年月
@@ -55,4 +55,4 @@ class AtSchool(models.Model):
   identity = models.CharField(max_length=1, choices=IDENTITY_CHOICES, default='0')
 
   def __str__(self):
-    return self.truename
+    return self.userId

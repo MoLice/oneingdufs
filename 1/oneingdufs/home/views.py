@@ -3,10 +3,11 @@
 
 @author MoLice<sf.molice@gmail.com>
 |- index 用户中心
+|- home_form 专用于处理index的post表单
 |- register 注册
 |- login 登录
 |- logout 注销
-|- user 个人信息
+|- atschool 在校相关
 |- settings 账号设置
 """
 
@@ -35,6 +36,16 @@ from oneingdufs.personalinfo.models import AtSchool
 def index(request):
   """/home/ 用户中心首页"""
   template_val = {}
+
+  user = request.user
+
+  template_val['form'] = Home_form(initial={
+    "email": user.email,
+    "truename": user.truename,
+    "telnum": user.telnum,
+    "cornet": user.cornet,
+    "qq": user.qq,
+  })
   return render_to_response('home/index.html',
       template_val,
       context_instance=RequestContext(request))
@@ -55,9 +66,10 @@ def register(request):
     if register_form.is_valid():
       # 验证通过，存储用户并转向
       data = register_form.cleaned_data
-      user = create_user(username=data['username'], password=data['password'])
+      # TODO 在此处向数字广外发出post请求验证账号密码
+      user = create_user(username=data['username'], password=data['password'], studentId=data['studentId'])
       user.save()
-      atschool = AtSchool(userId=user, studentId=data['studentId'], mygdufsPwd=data['mygdufs_pwd'])
+      atschool = AtSchool(userId=user, mygdufsPwd=data['mygdufs_pwd'])
       atschool.save()
       # login this user
       auth_login(request, authenticate(username=user.username, password=data['password']))
@@ -98,10 +110,36 @@ def logout(request):
   return HttpResponseRedirect(getRedirect(request))
 
 @login_required
-def user(request):
-  """/home/user/ 个人信息"""
+def home_form(request):
+  """/home/home_form 处理基本信息POST表单"""
   template_val = {}
-  return render_to_response('home/user.html',
+  if request.method == 'GET':
+    return HttpResponseRedirect('/home/')
+  else:
+    # POST，验证通过则保存修改
+    form = Home_form(request.POST)
+    if form.is_valid():
+      user = request.user
+      data = form.cleaned_data
+      # user无法迭代，无法使用key方式访问，只能一个一个写
+      user.email = data['email']
+      user.truename = data['truename']
+      user.telnum = data['telnum']
+      user.cornet = data['cornet']
+      user.qq = data['qq']
+      user.save()
+      return HttpResponseRedirect('/home/')
+    else:
+      template_val['form'] = form
+      return render_to_response('home/index.html',
+          template_val,
+          context_instance=RequestContext(request))
+
+@login_required
+def atschool(request):
+  """/home/atschool/ 个人信息"""
+  template_val = {}
+  return render_to_response('home/atschool.html',
       template_val,
       context_instance=RequestContext(request))
 
