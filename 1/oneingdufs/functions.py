@@ -4,6 +4,7 @@
 @author MoLice<sf.molice@gmail.com>
 |- create_user(username, password, **kwargs) 创建User实例并存储到数据库
 |- getRedirect(request) 用于表单，根据传入的request返回重定向的url
+|- getChoicesTuple() 从学院、专业、班级模型获取元组以供表单select控件使用
 """
 
 import datetime
@@ -100,3 +101,18 @@ def getRedirect(request):
           return query_next
   # 最终均无法通过检查则返回settings.LOGIN_REDIRECT_URL
   return settings.LOGIN_REDIRECT_URL
+
+# 从学院、专业、班级模型获取元组以供表单select控件使用 
+# @param {Model} models 从哪个models获取
+# @param {Boolean} hasEmpty 是否要添加空选项，默认为True
+# @param {String} emptyText 空选项的提示文字，默认为'请选择...'
+# @return {Tuple} 返回一个choices元组
+def getChoicesTuple(models, hasEmpty=True, emptyText='请选择...'):
+  models_all = models.objects.all()
+  models_length = models.objects.count()
+  models_list = []
+  for i in range(0, models_length):
+    models_list.append((str(models_all[i].id), models_all[i].name,))
+  if hasEmpty:
+    models_list.append(('', emptyText,))
+  return tuple(models_list)

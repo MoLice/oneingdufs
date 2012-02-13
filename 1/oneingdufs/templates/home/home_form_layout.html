@@ -1,6 +1,17 @@
-<form class="form-horizontal" method="post" action="/home/home_form/">
+{% comment %}
+block
+|- attr @default:class="form-horizontal"
+|- action
+|- legend
+|- user_info @default:见代码
+|- fields @default:见代码
+|- tabindex_submit
+|- tabindex_reset
+{% endcomment %}
+<form {% block attr %}class="form-horizontal"{% endblock %} action="{% block action %}{% endblock %}" method="post">
   <fieldset>
-    <legend>基本信息</legend>
+    <legend>{% block legend %}{% endblock %}</legend>
+    {% block user_info %}
     {# 昵称 #}
     <div class="control-group">
       <label class="control-label">昵称</label>
@@ -15,9 +26,11 @@
         <span class="uneditable-input text-like-input">{{user.studentId}}</span>
       </div>
     </div>
+    {% endblock %}
+    {% block fields %}
     {# form fields #}
     {% for fields in form %}
-    <div class="control-group{% if fields.errors.as_text %} error{% endif %}">
+    <div class="control-group{% if fields.errors %} error{% endif %}">
       <label class="control-label" for="{{fields.auto_id}}">{{fields.label}}</label>
       <div class="controls">
         {{fields}}
@@ -31,10 +44,11 @@
       </div>
     </div>
     {% endfor %}
+    {% endblock %}
     {# form-actions #}
     <div class="form-actions">
-      <button class="btn btn-primary" type="submit" tabindex="6">保存</button>
-      <button class="btn" type="reset" tabindex="7">取消</button>
+      <button class="btn btn-primary" type="submit" tabindex="{% block tabindex_submit %}{% endblock %}">保存</button>
+      <button class="btn" type="reset" tabindex="{% block tabindex_reset %}{% endblock %}">取消</button>
     </div>
   </fieldset>
 </form>

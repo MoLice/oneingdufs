@@ -14,6 +14,7 @@ from oneingdufs.home.forms import *
 urlpatterns = patterns('',
     url(r'^$', 'oneingdufs.views.index'),
     url(r'^about/$', 'oneingdufs.views.about'),
+    url(r'^test/$', 'oneingdufs.views.test'),
 )
 
 # apps views

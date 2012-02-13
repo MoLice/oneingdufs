@@ -3,6 +3,7 @@
 
 @author MoLice<sf.molice@gmail.com>
 |- index 全站首页
+|- about 关于
 """
 
 from django.http import (
@@ -16,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 # project import
 import oneingdufs.functions as _fn
 from oneingdufs.home.forms import Login_form
+from oneingdufs.administration.models import *
 
 def index(request):
   """网站首页
@@ -40,3 +42,8 @@ def about(request):
   包括本站、制作人员等
   """
   return render_to_response('globals/about.html')
+
+def test(request):
+  a = _fn.getChoicesTuple(Faculty)
+  return render_to_response('globals/index.html', {'test': a})
+  return HttpResponse(str(a))

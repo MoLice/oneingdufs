@@ -3,7 +3,7 @@
 
 |- Login_form 登录表单
 |- Register_form 注册表单
-|- Home_form 基本信息表单
+|- Info_form 基本信息表单
 |- AtSchool_form 在校相关表单
 """
 
@@ -11,6 +11,9 @@ import re
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
+# project import
+import oneingdufs.functions as _fn
+from oneingdufs.administration.models import *
 
 class Login_form(AuthenticationForm):
   """登录表单"""
@@ -34,11 +37,12 @@ class Login_form(AuthenticationForm):
 class Register_form(forms.Form):
   """注册表单"""
   # 用户名
-  username = forms.CharField(label='昵称', help_text='填写一个独一无二的昵称，4~20个字符', max_length=20,
+  username = forms.CharField(label='昵称', help_text='填写一个独一无二的昵称，一旦确定则无法更改', max_length=20,
       widget=forms.TextInput(attrs={
         'maxlength': '20',
         'pattern': r'^(\w|\d){4,20}$',
         'required': 'required',
+        'pattern': '4~20个字符',
         'tabindex': '1',
       }))
   # 密码
@@ -113,7 +117,7 @@ class Register_form(forms.Form):
       raise forms.ValidationError('该学号已被关联')
     return studentId
 
-class Home_form(forms.Form):
+class Info_form(forms.Form):
   """基本信息表单"""
   # 用户名、关联学号直接写死，无法更改
   # 邮箱
@@ -130,7 +134,6 @@ class Home_form(forms.Form):
       widget=forms.TextInput(attrs={
         'maxlength': '20',
         'pattern': r'^[\u00b7\u4e00-\u9fa5]*$',
-        'placeholder': '张某某',
         'tabindex': '2',
       }))
   # 手机
@@ -208,3 +211,37 @@ class Home_form(forms.Form):
     if User.objects.filter(qq__iexact=qq):
       raise forms.ValidationError('该QQ已被关联')
     return qq
+
+class AtSchool(forms.Form):
+  """在校相关表单"""
+  FACULTY_CHOICES = _fn.getChoicesTuple(Faculty, emptyText='学院...')
+
+  born = forms.DateField(label='出生日期', required=False,
+      widget=forms.TextInput(attrs={
+        'class': 'J_datepicker',
+        'maxlength': '10',
+        'placeholder': 'YYYY-MM-DD',
+        'tabindex': '1',
+      }))
+  enroll = forms.DateField(label='入学年月', required=False,
+      widget=forms.TextInput(attrs={
+        'class': 'J_datepicker',
+        'maxlength': '7',
+        'placeholder': 'YYYY-MM',
+        'tabindex': '2',
+      }))
+  faculty = forms.ChoiceField(label='学院', choices=FACULTY_CHOICES, required=False,
+      widget=forms.Select(attrs={
+        'style': 'width:140px;',
+        'tabindex': '3',
+      }))
+  major = forms.ChoiceField(label='专业', choices=(('', '专业...',),), required=False,
+      widget=forms.Select(attrs={
+        'style': 'width:140px;',
+        'tabindex': '4',
+      }))
+  classlist = forms.ChoiceField(label='班级', choices=(('', '班级...',),), required=False,
+      widget=forms.Select(attrs={
+        'style': 'width:140px;',
+        'tabindex': '5',
+      }))

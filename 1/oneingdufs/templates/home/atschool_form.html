@@ -1,0 +1,52 @@
+{% extends 'home/home_form_layout.html' %}
+{% block action %}/home/atschool/{% endblock %}
+{% block legend %}在校相关{% endblock %}
+{% block tabindex_submit %}6{% endblock %}
+{% block tabindex_reset %}7{% endblock %}
+{% block fields %}
+  {# form fields #}
+  {% for fields in form %}
+    {% ifnotequal fields.label '学院' %}
+    {% ifnotequal fields.label '专业' %}
+    {% ifnotequal fields.label '班级' %}
+      <div class="control-group{% if fields.errors %} error{% endif %}">
+        <label class="control-label" for="{{fields.auto_id}}">{{fields.label}}</label>
+        <div class="controls">
+          {{fields}}
+          <p class="help-block">
+          {% if fields.errors %}
+          {{fields.errors.as_text}}
+          {% else %}
+          {{fields.help_text}}
+          {% endif %}
+          </p>
+        </div>
+      </div>
+    {% endifnotequal %}
+    {% endifnotequal %}
+    {% endifnotequal %}
+  {% endfor %}
+
+  {# 关联班级 #}
+  <div class="control-group{% if form.faculty.errors or form.major.errors or form.classlist.errors %} error{% endif %}">
+    <label class="control-label" for="{{form.faculty.auto_id}}">关联班级</label>
+    <div class="controls">
+      {{form.faculty}} {{form.major}} {{form.classlist}}
+      <p class="help-block">
+      {% if form.faculty.errors or form.major.errors or form.classlist.errors %}
+        {% if form.faculty.errors %}
+          {{form.faculty.errors.as_text}}
+        {% else %}
+          {% if form.major.errors %}
+            {{form.major.errors.as_text}}
+          {% else %}
+            {{form.classlist.errors.as_text}}
+          {% endif %}
+        {% endif %}
+      {% else %}
+      关联班级后将能使用班级数据并享受相应功能
+      {% endif %}
+      </p>
+    </div>
+  </div>
+{% endblock %}

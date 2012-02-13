@@ -18,7 +18,7 @@ class Major(models.Model):
 
 class ClassList(models.Model):
   """班级"""
-  name = models.CharField(max_length=20, unique=True)
+  name = models.CharField(max_length=20)
   majorId = models.ForeignKey('Major')
 
   def __str__(self):

@@ -3,12 +3,14 @@
 
 @author MoLice<sf.molice@gmail.com>
 |- index 用户中心
-|- home_form 专用于处理index的post表单
 |- register 注册
 |- login 登录
 |- logout 注销
+|- info 基本信息表单
 |- atschool 在校相关
 |- settings 账号设置
+|- security 账号安全
+|- relation 关联修改
 """
 
 import urlparse
@@ -28,28 +30,16 @@ from oneingdufs.settings import LOGIN_REDIRECT_URL
 # 导入form表单
 from oneingdufs.home.forms import *
 # 导入常用函数集合
-from oneingdufs.functions import create_user, getRedirect
+import oneingdufs.functions as _fn
 # 导入模型
-from oneingdufs.personalinfo.models import AtSchool
+import oneingdufs.personalinfo.models as pm
+import oneingdufs.administration.models as am
 
 @login_required
 def index(request):
   """/home/ 用户中心首页"""
-  template_val = {}
-
-  user = request.user
-
-  template_val['form'] = Home_form(initial={
-    "email": user.email,
-    "truename": user.truename,
-    "telnum": user.telnum,
-    "cornet": user.cornet,
-    "qq": user.qq,
-  })
-  return render_to_response('home/index.html',
-      template_val,
-      context_instance=RequestContext(request))
-
+  return HttpResponseRedirect('/home/info/')
+  
 def register(request):
   """/home/register/ 注册"""
   template_val = {}
@@ -67,13 +57,13 @@ def register(request):
       # 验证通过，存储用户并转向
       data = register_form.cleaned_data
       # TODO 在此处向数字广外发出post请求验证账号密码
-      user = create_user(username=data['username'], password=data['password'], studentId=data['studentId'])
+      user = _fn.create_user(username=data['username'], password=data['password'], studentId=data['studentId'])
       user.save()
-      atschool = AtSchool(userId=user, mygdufsPwd=data['mygdufs_pwd'])
+      atschool = pm.AtSchool(userId=user, mygdufsPwd=data['mygdufs_pwd'])
       atschool.save()
       # login this user
       auth_login(request, authenticate(username=user.username, password=data['password']))
-      return HttpResponseRedirect(getRedirect(request))
+      return HttpResponseRedirect(_fn.getRedirect(request))
     else:
       # 验证失败，修改表单
       template_val['form'] = register_form
@@ -87,7 +77,7 @@ def login(request):
 
   if request.method == "GET":
     if request.user.is_authenticated():
-      return HttpResponseRedirect(getRedirect(request))
+      return HttpResponseRedirect(_fn.getRedirect(request))
     template_val['form'] = Login_form()
     return render_to_response('home/login.html',
         template_val,
@@ -97,7 +87,7 @@ def login(request):
     if form.is_valid():
       # login the user
       auth_login(request, form.get_user())
-      return HttpResponseRedirect(getRedirect(request))
+      return HttpResponseRedirect(_fn.getRedirect(request))
     else:
       template_val['form'] = form
       return render_to_response('home/login.html',
@@ -107,19 +97,29 @@ def login(request):
 def logout(request):
   """/home/logout/ 注销"""
   auth_logout(request)
-  return HttpResponseRedirect(getRedirect(request))
+  return HttpResponseRedirect(_fn.getRedirect(request))
 
 @login_required
-def home_form(request):
-  """/home/home_form 处理基本信息POST表单"""
+def info(request):
+  """/home/info/ 基本信息表单"""
   template_val = {}
+  user = request.user
   if request.method == 'GET':
-    return HttpResponseRedirect('/home/')
+    # GET，显示基本信息表单
+    template_val['form'] = Info_form(initial={
+      "email": user.email,
+      "truename": user.truename,
+      "telnum": user.telnum,
+      "cornet": user.cornet,
+      "qq": user.qq,
+    })
+    return render_to_response('home/index.html',
+        template_val,
+        context_instance=RequestContext(request))
   else:
     # POST，验证通过则保存修改
-    form = Home_form(request.POST)
+    form = Info_form(request.POST)
     if form.is_valid():
-      user = request.user
       data = form.cleaned_data
       # user无法迭代，无法使用key方式访问，只能一个一个写
       user.email = data['email']
@@ -128,7 +128,7 @@ def home_form(request):
       user.cornet = data['cornet']
       user.qq = data['qq']
       user.save()
-      return HttpResponseRedirect('/home/')
+      return HttpResponseRedirect('/home/info/')
     else:
       template_val['form'] = form
       return render_to_response('home/index.html',
@@ -139,14 +139,38 @@ def home_form(request):
 def atschool(request):
   """/home/atschool/ 个人信息"""
   template_val = {}
-  return render_to_response('home/atschool.html',
-      template_val,
-      context_instance=RequestContext(request))
+  if request.method == 'GET':
+    pm_atschool = pm.AtSchool.objects.get(userId=request.user)
+    pm_major = am.Major.objects.get(id=pm_atschool.classId.id)
+    pm_faculty = am.Faculty.objects.get(id=pm_major.facultyId.id)
+    template_val['form'] = AtSchool(initial={
+      'born': pm_atschool.born,
+      'enroll': pm_atschool.enroll,
+      'faculty': str(pm_faculty.id),
+      'major': str(pm_major.id),
+      'classlist': str(pm_atschool.classId.id),
+    })
+    return render_to_response('home/atschool.html',
+        template_val,
+        context_instance=RequestContext(request))
 
 @login_required
 def settings(request):
   """/home/settings/ 账号设置"""
+  return HttpResponseRedirect('/home/settings/security/')
+
+@login_required
+def security(request):
+  """/home/settings/security/ 账号安全"""
   template_val = {}
-  return render_to_response('home/settings.html',
+  return render_to_response('home/security.html',
+      template_val,
+      context_instance=RequestContext(request))
+
+@login_required
+def relation(request):
+  """/home/settings/relation/ 关联修改"""
+  template_val = {}
+  return render_to_response('home/relation.html',
       template_val,
       context_instance=RequestContext(request))

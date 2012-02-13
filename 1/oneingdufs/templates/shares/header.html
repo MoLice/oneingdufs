@@ -9,9 +9,9 @@
       <a class="brand" href="/" title="首页">One in GDUFS</a>
       <div class="nav-collapse">
         <ul class="nav">
-          <li class="{% ifequal request.path '/' %}active{% endifequal %}"><a href="/">首页</a></li>
-          <li class="{% ifequal request.path '/home/' %}active{% endifequal %}"><a href="/home/">用户中心</a></li>
-          <li class="{% ifequal request.path '/card/' %}active{% endifequal %}"><a href="/card/">校园卡</a></li>
+          <li class="{% if '/' == request.path %}active{% endif %}"><a href="/">首页</a></li>
+          <li class="{% if '/home/' in request.path %}active{% endif %}"><a href="/home/">用户中心</a></li>
+          <li class="{% if '/card/' in request.path %}active{% endif %}"><a href="/card/">校园卡</a></li>
         </ul>
       </div>
     </div>
