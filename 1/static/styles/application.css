@@ -19,6 +19,7 @@ body {padding-top:80px;}
 /* 修复button.btn和a.btn同行时的垂直对齐 */
 a.btn {vertical-align: middle;}
 .nearbybtn {vertical-align:middle;}
+label.inline {display:inline;}
 
 .uneditable-input.text-like-input {
   border-color:transparent;

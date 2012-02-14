@@ -104,12 +104,16 @@ def getRedirect(request):
 
 # 从学院、专业、班级模型获取元组以供表单select控件使用 
 # @param {Model} models 从哪个models获取
+# @param {Tuple|Boolean} foreignKey 一个元组，存储该模型的外键，用于过滤数据，默认为None，例：('facultyId', '1',)
 # @param {Boolean} hasEmpty 是否要添加空选项，默认为True
 # @param {String} emptyText 空选项的提示文字，默认为'请选择...'
 # @return {Tuple} 返回一个choices元组
-def getChoicesTuple(models, hasEmpty=True, emptyText='请选择...'):
-  models_all = models.objects.all()
-  models_length = models.objects.count()
+def getChoicesTuple(models, foreignKey=None, hasEmpty=True, emptyText='请选择...'):
+  if foreignKey:
+    exec 'models_all = models.objects.filter(%s=%s)' % (foreignKey[0], foreignKey[1])
+  else:
+    models_all = models.objects.all()
+  models_length = models_all.count()
   models_list = []
   for i in range(0, models_length):
     models_list.append((str(models_all[i].id), models_all[i].name,))

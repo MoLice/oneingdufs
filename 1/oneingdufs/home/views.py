@@ -118,7 +118,7 @@ def info(request):
         context_instance=RequestContext(request))
   else:
     # POST，验证通过则保存修改
-    form = Info_form(request.POST)
+    form = Info_form(data=request.POST, user=user)
     if form.is_valid():
       data = form.cleaned_data
       # user无法迭代，无法使用key方式访问，只能一个一个写
@@ -141,18 +141,40 @@ def atschool(request):
   template_val = {}
   if request.method == 'GET':
     pm_atschool = pm.AtSchool.objects.get(userId=request.user)
-    pm_major = am.Major.objects.get(id=pm_atschool.classId.id)
-    pm_faculty = am.Faculty.objects.get(id=pm_major.facultyId.id)
+    pm_major = ''
+    pm_faculty = ''
+    choices = {}
+    # 假如存在班级id则读取对应的学院班级专业值及候选项
+    if pm_atschool.classId:
+      pm_major = am.Major.objects.get(id=pm_atschool.classId.id)
+      pm_faculty = am.Faculty.objects.get(id=pm_major.facultyId.id)
+      # set choices
+      choices = {
+          'major': _fn.getChoicesTuple(Major, foreignKey=('facultyId', str(pm_faculty.id),)),
+          'classlist': _fn.getChoicesTuple(ClassList, foreignKey=('majorId', str(pm_major.id),)),
+      }
+    # 填充form
     template_val['form'] = AtSchool(initial={
       'born': pm_atschool.born,
       'enroll': pm_atschool.enroll,
-      'faculty': str(pm_faculty.id),
-      'major': str(pm_major.id),
-      'classlist': str(pm_atschool.classId.id),
+      'faculty': pm_faculty and str(pm_faculty.id),
+      'major': pm_major and str(pm_major.id),
+      'classlist': pm_atschool.classId and str(pm_atschool.classId.id),
     })
-    return render_to_response('home/atschool.html',
-        template_val,
-        context_instance=RequestContext(request))
+    # 动态设置候选项
+    if choices:
+      for key in choices:
+        template_val['form'].fields[key].choices = choices[key]
+  else:
+    # POST
+    form = AtSchool(request.POST)
+    if form.is_valid():
+      return HttpResponse('验证通过')
+    else:
+      template_val['form'] = form
+  return render_to_response('home/atschool.html',
+      template_val,
+      context_instance=RequestContext(request))
 
 @login_required
 def settings(request):

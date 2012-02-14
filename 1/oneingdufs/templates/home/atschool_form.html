@@ -31,7 +31,9 @@
   <div class="control-group{% if form.faculty.errors or form.major.errors or form.classlist.errors %} error{% endif %}">
     <label class="control-label" for="{{form.faculty.auto_id}}">关联班级</label>
     <div class="controls">
-      {{form.faculty}} {{form.major}} {{form.classlist}}
+      {{form.faculty}}<label class="inline nearbybtn" for="{{form.faculty.auto_id}}">学院</label>
+      {{form.major}}<label class="inline nearbybtn" for="{{form.major.auto_id}}">专业</label>
+      {{form.classlist}}<label class="inline nearbybtn" for="{{form.classlist.auto_id}}">班级</label>
       <p class="help-block">
       {% if form.faculty.errors or form.major.errors or form.classlist.errors %}
         {% if form.faculty.errors %}

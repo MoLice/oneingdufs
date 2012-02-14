@@ -23,11 +23,11 @@ class Student(Profile):
   # 真名
   truename = models.CharField(max_length=20, null=True) 
   # 手机
-  telnum = models.CharField(max_length=11, null=True, unique=True)
+  telnum = models.CharField(max_length=11, null=True)
   # 短号
-  cornet = models.CharField(max_length=10, null=True, unique=True)
+  cornet = models.CharField(max_length=10, null=True)
   # qq
-  qq = models.CharField(max_length=12, null=True, unique=True)
+  qq = models.CharField(max_length=12, null=True)
   # 状态
   state = models.CharField(max_length=10, null=True)
 

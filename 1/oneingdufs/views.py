@@ -14,6 +14,7 @@ from django.http import (
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 # project import
 import oneingdufs.functions as _fn
 from oneingdufs.home.forms import Login_form
@@ -44,6 +45,5 @@ def about(request):
   return render_to_response('globals/about.html')
 
 def test(request):
-  a = _fn.getChoicesTuple(Faculty)
-  return render_to_response('globals/index.html', {'test': a})
+  a = 1
   return HttpResponse(str(a))
