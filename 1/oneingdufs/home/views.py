@@ -13,7 +13,6 @@
 |- relation 关联修改
 """
 
-import urlparse
 from django.http import (
   Http404,
   HttpResponse,

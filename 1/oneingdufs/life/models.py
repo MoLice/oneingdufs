@@ -1,15 +1,16 @@
 # coding=utf-8
-"""oneingdufs.campuscard.models 校园卡模型
+"""oneingdufs.life.models 校园生活模型
+|- Card 校园卡
+|- Water 订水
 
 @author: MoLice<sf.molice@gmail.com>
-@createdate: 2012-01-30
 """
 
 from django.db import models
 from django.contrib.auth.models import User
 # project import
 
-class Campuscard(models.Model):
+class Card(models.Model):
   """校园卡"""
   # 用户id
   userId = models.ForeignKey(User)

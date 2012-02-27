@@ -21,8 +21,8 @@ urlpatterns = patterns('',
 urlpatterns += patterns('',
   # home
   url(r'^home/', include('oneingdufs.home.urls')),
-  # campuscard
-  url(r'^card/', include('oneingdufs.campuscard.urls')),
+  # life
+  url(r'^life/', include('oneingdufs.life.urls')),
 )
 
 # 静态文件访问

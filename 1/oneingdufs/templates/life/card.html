@@ -1,0 +1,17 @@
+{% extends 'layouts/application.html' %}
+{# /life/card/ 校园卡 #}
+{% block title %}校园卡{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="span4">
+    <table class="table table-striped table-bordered">
+      <tr><th>卡号</th><td>{{card.cardId}}</td></tr>
+      <tr><th>余额</th><td>￥{{card.balance}}</td></tr>
+      <tr><th>最后一次消费时间</th><td>{{card.lasttime|date:'Y-m-d H:i:s'}}</td></tr>
+      <tr><th>最后一次消费金额</th><td>￥{{card.lastspend}}</td></tr>
+      <tr><th>最后一次消费地点</th><td>{{card.lastposition}}</td></tr>
+    </table>
+  </div>
+</div>
+{% endblock %}

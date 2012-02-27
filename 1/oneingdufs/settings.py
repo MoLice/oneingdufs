@@ -123,6 +123,6 @@ INSTALLED_APPS = (
 
     'oneingdufs.administration',
     'oneingdufs.personalinfo',
-    'oneingdufs.campuscard',
+    'oneingdufs.life',
     'oneingdufs.home',
 )
