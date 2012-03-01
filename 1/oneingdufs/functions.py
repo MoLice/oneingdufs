@@ -5,11 +5,14 @@
 |- create_user(username, password, **kwargs) 创建User实例并存储到数据库
 |- getRedirect(request) 用于表单，根据传入的request返回重定向的url
 |- getChoicesTuple() 从学院、专业、班级模型获取元组以供表单select控件使用
+|- checkMyGdufsAuth() 发送post请求，验证数字广外账号密码
 """
 
 import datetime
 import re
 import urlparse
+import urllib
+import urllib2
 from django.contrib.auth.models import User
 # project import
 from oneingdufs import settings
@@ -120,3 +123,26 @@ def getChoicesTuple(models, foreignKey=None, hasEmpty=True, emptyText='请选择
   if hasEmpty:
     models_list.append(('', emptyText,))
   return tuple(models_list)
+
+# 发送post请求，验证数字广外账号密码
+# @param {String} username 数字广外用户名
+# @param {String} password 数字广外密码
+# @return {Boolean} 验证成功则返回True，否则返回False
+def checkMyGdufsAuth(username, password):
+  url = 'http://auth.gdufs.edu.cn/pkmslogin.form'
+  query = {
+    'username': username,
+    'password': password,
+    'login-form-type': 'pwd',
+  }
+  data = urllib.urlencode(query)
+  request = urllib2.Request(url, data)
+  try:
+    response = urllib2.urlopen(request)
+    result = response.read()
+    # 数字广外登录成功时返回的页面内会包含这一句，假如这一句更改了则验证规则也得修改
+    if re.findall(r'Your login was successful', result):
+      return True
+    return False
+  except urllib2.URLError, e:
+    return False

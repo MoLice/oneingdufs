@@ -55,7 +55,6 @@ def register(request):
     if register_form.is_valid():
       # 验证通过，存储用户并转向
       data = register_form.cleaned_data
-      # TODO 在此处向数字广外发出post请求验证账号密码
       user = _fn.create_user(username=data['username'], password=data['password'], studentId=data['studentId'])
       user.save()
       atschool = pm.AtSchool(userId=user, mygdufsPwd=data['mygdufs_pwd'])

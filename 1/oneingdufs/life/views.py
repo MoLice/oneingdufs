@@ -5,6 +5,7 @@
 |- index 校园生活首页
 |- card 校园卡
 |- water 订水
+|- fix 报修
 """
 
 from django.http import (
@@ -18,6 +19,8 @@ from django.contrib.auth.decorators import login_required
 # project import
 # 模型
 import oneingdufs.life.models as lm
+# 表单
+from oneingdufs.life.forms import *
 
 def index(request):
   """/life/ 校园生活首页"""
@@ -40,6 +43,15 @@ def card(request):
 def water(request):
   """/life/water/ 订水"""
   template_val = {}
+  template_val['form'] = Water()
   return render_to_response('life/water.html',
+      template_val,
+      context_instance=RequestContext(request))
+
+@login_required
+def fix(request):
+  """/life/fix/ 报修"""
+  template_val = {}
+  return render_to_response('life/fix.html',
       template_val,
       context_instance=RequestContext(request))

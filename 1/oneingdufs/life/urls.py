@@ -10,4 +10,5 @@ urlpatterns = patterns('',
   url(r'^$', index),
   url(r'^card/', card),
   url(r'^water/', water),
+  url(r'^fix/', fix),
 )

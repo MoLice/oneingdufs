@@ -4,7 +4,7 @@
 |- Login_form 登录表单
 |- Register_form 注册表单
 |- Info_form 基本信息表单
-|- AtSchool_form 在校相关表单
+|- AtSchool 在校相关表单
 """
 
 import re
@@ -82,6 +82,7 @@ class Register_form(forms.Form):
     password = cleans['password']
     password_re = cleans['password_re']
     studentId = cleans['studentId']
+    mygdufs_pwd = cleans['mygdufs_pwd']
 
     # 验证昵称是否合法、被占用
     if re.match(r'^(\w|\d){4,20}$', username) == None:
@@ -108,6 +109,10 @@ class Register_form(forms.Form):
     elif User.objects.filter(studentId__iexact=studentId):
       errors['studentId'] = ErrorList(['该学号已被关联'])
       del cleans['studentId']
+    # 验证数字广外账号密码
+    elif not _fn.checkMyGdufsAuth(studentId, mygdufs_pwd):
+      errors['mygdufs_pwd'] = ErrorList(['关联数字广外账号失败，请检查学号或密码'])
+      del cleans['mygdufs_pwd']
 
     return cleans
 
