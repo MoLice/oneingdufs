@@ -73,7 +73,7 @@ def login(request):
   """/home/login/ 登录"""
   template_val = {}
 
-  if request.method == "GET":
+  if request.method == 'GET':
     if request.user.is_authenticated():
       return HttpResponseRedirect(_fn.getRedirect(request))
     template_val['form'] = Login_form()
@@ -135,7 +135,7 @@ def info(request):
 
 @login_required
 def atschool(request):
-  """/home/atschool/ 个人信息"""
+  """/home/atschool/ 在校相关"""
   template_val = {}
   if request.method == 'GET':
     pm_atschool = pm.AtSchool.objects.get(userId=request.user)
@@ -152,7 +152,7 @@ def atschool(request):
           'classlist': _fn.getChoicesTuple(ClassList, foreignKey=('majorId', str(pm_major.id),)),
       }
     # 填充form
-    template_val['form'] = AtSchool(initial={
+    template_val['form'] = AtSchool_form(initial={
       'born': pm_atschool.born,
       'enroll': pm_atschool.enroll,
       'faculty': pm_faculty and str(pm_faculty.id),
@@ -165,7 +165,7 @@ def atschool(request):
         template_val['form'].fields[key].choices = choices[key]
   else:
     # POST
-    form = AtSchool(request.POST)
+    form = AtSchool_form(request.POST)
     if form.is_valid():
       return HttpResponse('验证通过')
     else:

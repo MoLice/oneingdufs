@@ -4,7 +4,7 @@
 |- Login_form 登录表单
 |- Register_form 注册表单
 |- Info_form 基本信息表单
-|- AtSchool 在校相关表单
+|- AtSchool_form 在校相关表单
 """
 
 import re
@@ -13,6 +13,8 @@ from django.forms.util import ErrorList
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 # project import
+# 自定义表单
+import oneingdufs.forms as _fm
 import oneingdufs.functions as _fn
 from oneingdufs.administration.models import *
 
@@ -78,41 +80,47 @@ class Register_form(forms.Form):
     errors = self._errors
     cleans = self.cleaned_data
 
-    username = cleans['username']
-    password = cleans['password']
-    password_re = cleans['password_re']
-    studentId = cleans['studentId']
-    mygdufs_pwd = cleans['mygdufs_pwd']
+    username = cleans.get('username', None)
+    password = cleans.get('password', None)
+    password_re = cleans.get('password_re', None)
+    studentId = cleans.get('studentId', None)
+    mygdufs_pwd = cleans.get('mygdufs_pwd', None)
 
-    # 验证昵称是否合法、被占用
-    if re.match(r'^(\w|\d){4,20}$', username) == None:
-      errors['username'] = ErrorList(['只能使用英文字母、数字或下划线，长度限制为4~20个字符'])
-      del cleans['username']
-    elif User.objects.filter(username__iexact=username):
-      errors['username'] = ErrorList(['该昵称已被使用'])
-      del cleans['username']
+    if username != None:
+      # 验证昵称是否合法、被占用
+      if re.match(r'^(\w|\d){4,20}$', username) == None:
+        errors['username'] = ErrorList(['只能使用英文字母、数字或下划线，长度限制为4~20个字符'])
+        del cleans['username']
+      elif User.objects.filter(username__iexact=username):
+        errors['username'] = ErrorList(['该昵称已被使用'])
+        del cleans['username']
 
-    # 验证密码是否少于6位、过于简单
-    if re.match(r'(^111111$|^123456$|^abcdef$|^asdfgh$)|^.{0,5}$', password) != None:
-      errors['password'] = ErrorList(['密码过于简单，请尽量同时包含大小写字母、数字、符号并不少于6位'])
-      del cleans['password']
+    if password != None:
+      # 验证密码是否少于6位、过于简单
+      if re.match(r'(^111111$|^123456$|^abcdef$|^asdfgh$)|^.{0,5}$', password) != None:
+        errors['password'] = ErrorList(['密码过于简单，请尽量同时包含大小写字母、数字、符号并不少于6位'])
+        del cleans['password']
 
-    # 验证两次输入密码是否一致
-    if password_re != password:
-      errors['password_re'] = ErrorList(['两次输入密码不一致'])
-      del cleans['password_re']
+    if password_re != None:
+      # 验证两次输入密码是否一致
+      if password_re != password:
+        errors['password_re'] = ErrorList(['两次输入密码不一致'])
+        del cleans['password_re']
 
-    # 验证学号是否合法、已存在
-    if re.match(r'^20\d{9}$', studentId) == None:
-      errors['studentId'] = ErrorList(['请输入一个学号'])
-      del cleans['studentId']
-    elif User.objects.filter(studentId__iexact=studentId):
-      errors['studentId'] = ErrorList(['该学号已被关联'])
-      del cleans['studentId']
-    # 验证数字广外账号密码
-    elif not _fn.checkMyGdufsAuth(studentId, mygdufs_pwd):
-      errors['mygdufs_pwd'] = ErrorList(['关联数字广外账号失败，请检查学号或密码'])
-      del cleans['mygdufs_pwd']
+    if studentId != None:
+      # 验证学号是否合法、已存在
+      if re.match(r'^20\d{9}$', studentId) == None:
+        errors['studentId'] = ErrorList(['请输入一个学号'])
+        del cleans['studentId']
+      elif User.objects.filter(studentId__iexact=studentId):
+        errors['studentId'] = ErrorList(['该学号已被关联'])
+        del cleans['studentId']
+
+    #if mygdufs_pwd != None:
+      # 验证数字广外账号密码
+      #elif not _fn.checkMyGdufsAuth(studentId, mygdufs_pwd):
+      #  errors['mygdufs_pwd'] = ErrorList(['关联数字广外账号失败，请检查学号或密码'])
+      #  del cleans['mygdufs_pwd']
 
     return cleans
 
@@ -129,8 +137,7 @@ class Info_form(forms.Form):
   # 邮箱
   email = forms.EmailField(label='邮箱', help_text='添加常用邮箱',
       required=False, error_messages={'invalid': '别骗我，这不像邮箱吧...'},
-      widget=forms.TextInput(attrs={
-        'type': 'email',
+      widget=_fm.EmailInput(attrs={
         'placeholder': 'admin@example.com',
         'tabindex': '1',
       }))
@@ -145,8 +152,7 @@ class Info_form(forms.Form):
   # 手机
   telnum = forms.CharField(label='手机', help_text='11位数字，添加手机号能让同学们方便地找到你',
       max_length=11, required=False,
-      widget=forms.TextInput(attrs={
-        'type': 'tel',
+      widget=_fm.TelInput(attrs={
         'maxlength': '11',
         'pattern': r'^\d{11}$',
         'tabindex': '3',
@@ -154,7 +160,7 @@ class Info_form(forms.Form):
   # 短号
   cornet = forms.CharField(label='短号', help_text='3~6位数字',
       max_length=6, required=False,
-      widget=forms.TextInput(attrs={
+      widget=_fm.TelInput(attrs={
         'maxlength': '6',
         'pattern': r'^\d{3,6}$',
         'tabindex': '4',
@@ -174,43 +180,47 @@ class Info_form(forms.Form):
     cleans = self.cleaned_data
     user = self.user
 
-    email = cleans['email']
-    truename = cleans['truename']
-    telnum = cleans['telnum']
-    cornet = cleans['cornet']
-    qq = cleans['qq']
+    email = cleans.get('email', None)
+    truename = cleans.get('truename', None)
+    telnum = cleans.get('telnum', None)
+    cornet = cleans.get('cornet', None)
+    qq = cleans.get('cornet', None)
 
-    # 验证真名是否纯中文
-    if truename and not re.match(ur'^[\u00b7\u4e00-\u9fa5]*$', unicode(truename)):
-      errors['truename'] = ErrorList(['只能包含中文字符及间隔符“·”'])
-      del errors['truename']
+    if truename != None:
+      # 验证真名是否纯中文
+      if truename and not re.match(ur'^[\u00b7\u4e00-\u9fa5]*$', unicode(truename)):
+        errors['truename'] = ErrorList(['只能包含中文字符及间隔符“·”'])
+        del errors['truename']
 
     # 验证4个字段是否有改动或unique
     tmplist = ['email', 'telnum', 'cornet', 'qq',]
     for value in tmplist:
-      if not cleans[value] or self._nochange(value, cleans):
+      if not cleans.get(value, None) or self._nochange(value, cleans):
         # 提交值为空或无变动，可跳过该字段的下一步验证
         pass
-      else:
+      elif cleans.get(value, None) != None:
         exec 'tmpresult = User.objects.filter(%s__iexact=%s)' % (value, value)
         if tmpresult:
           errors[value] = ErrorList(['该%s已被关联' % value])
           del cleans[value]
 
-    # 验证手机号是否合法
-    if 'telnum' in cleans and not re.match(r'^(\d{11})*$', telnum):
-      errors['telnum'] = ErrorList(['手机号码必须为11位纯数字'])
-      del cleans['telnum']
+    if telnum != None:
+      # 验证手机号是否合法
+      if not re.match(r'^(\d{11})*$', telnum):
+        errors['telnum'] = ErrorList(['手机号码必须为11位纯数字'])
+        del cleans['telnum']
 
-    # 验证短号是否合法
-    if 'cornet' in cleans and not re.match(r'^(\d{3,6})*$', cornet):
-      errors['cornet'] = ErrorList(['短号为3~6位的数字'])
-      del cleans['cornet']
+    if cornet != None:
+      # 验证短号是否合法
+      if not re.match(r'^(\d{3,6})*$', cornet):
+        errors['cornet'] = ErrorList(['短号为3~6位的数字'])
+        del cleans['cornet']
 
-    # 验证QQ是否合法
-    if 'qq' in cleans and not re.match(r'^\d{0,10}$', qq):
-      errors['qq'] = ErrorList(['QQ号码是少于10位的数字'])
-      del cleans['qq']
+    if qq != None:
+      # 验证QQ是否合法
+      if not re.match(r'^\d{0,10}$', qq):
+        errors['qq'] = ErrorList(['QQ号码是少于10位的数字'])
+        del cleans['qq']
 
     return cleans
 
@@ -226,7 +236,7 @@ class Info_form(forms.Form):
     }
     return result[itemname]
   
-class AtSchool(forms.Form):
+class AtSchool_form(forms.Form):
   """在校相关表单"""
   FACULTY_CHOICES = _fn.getChoicesTuple(Faculty, emptyText='请选择...')
 
@@ -265,22 +275,24 @@ class AtSchool(forms.Form):
     errors = self._errors
     cleans = self.cleaned_data
 
-    born = cleans['born']
-    enroll = cleans['enroll']
-    faculty = cleans['faculty']
-    major = cleans['major']
-    classlist = cleans['classlist']
+    born = cleans.get('born', None)
+    enroll = cleans.get('enroll', None)
+    faculty = cleans.get('faculty', None)
+    major = cleans.get('major', None)
+    classlist = cleans.get('classlist', None)
 
-    # 只要三个框有一个非空，则三个均须非空
-    if faculty or major or classlist:
-      if not faculty:
-        errors['faculty'] = ErrorList(['请选择学院'])
-        del cleans['faculty']
-      if not major:
-        errors['major'] = ErrorList(['请选择专业'])
-        del cleans['major']
-      if not classlist:
-        errors['classlist'] = ErrorList(['请选择班级'])
-        del cleans['classlist']
+    # 三个框均通过默认验证后，才执行下面的自定义验证
+    if faculty != None and major != None and classlist != None:
+      # 只要三个框有一个非空，则三个均须非空
+      if faculty or major or classlist:
+        if not faculty:
+          errors['faculty'] = ErrorList(['请选择学院'])
+          del cleans['faculty']
+        if not major:
+          errors['major'] = ErrorList(['请选择专业'])
+          del cleans['major']
+        if not classlist:
+          errors['classlist'] = ErrorList(['请选择班级'])
+          del cleans['classlist']
 
     return cleans

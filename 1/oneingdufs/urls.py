@@ -4,7 +4,6 @@
 from django.conf.urls.defaults import patterns, include, url
 # project import
 from oneingdufs import settings
-from oneingdufs.home.forms import *
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -15,12 +14,14 @@ urlpatterns = patterns('',
     url(r'^$', 'oneingdufs.views.index'),
     url(r'^about/$', 'oneingdufs.views.about'),
     url(r'^test/$', 'oneingdufs.views.test'),
+    url(r'^/api/getcsrftoken/$', 'oneingdufs.views.getcsrftoken'),
 )
 
 # apps views
 urlpatterns += patterns('',
   # home
   url(r'^home/', include('oneingdufs.home.urls')),
+  url(r'^api/home/', include('oneingdufs.home.apiurls')),
   # life
   url(r'^life/', include('oneingdufs.life.urls')),
 )

@@ -4,6 +4,7 @@
 @author MoLice<sf.molice@gmail.com>
 |- index 全站首页
 |- about 关于
+|- getcsrftoken 获取csrftoken
 """
 
 from django.http import (
@@ -44,6 +45,12 @@ def about(request):
   """
   return render_to_response('globals/about.html')
 
+def getcsrftoken(request):
+  """/api/getcsrftoken/ 提供客户端从Set-Cookie头部中获取csrftoken
+  出于节省流量的考虑，返回数据尽量压缩体积
+  """
+  return HttpResponse('{}')
+
 def test(request):
-  a = 1
-  return HttpResponse(str(a))
+  return HttpResponse(request.session.session_key)
+  return HttpResponse(request.META.get("X_TYPE", "null"))

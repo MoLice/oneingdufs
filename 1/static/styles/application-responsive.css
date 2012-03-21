@@ -17,7 +17,7 @@
 @media (min-width: 1200px) {.container {background:pink;}}
 */
 @media (max-width: 480px) {
-  #register .container {padding-top:0;}
+  body {padding-top:0;}
 }
 @media (max-width: 768px) {
   #register .itcanchange {margin-top:0;}

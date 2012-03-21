@@ -4,7 +4,6 @@
 from django.conf.urls.defaults import patterns, include, url
 # project import
 from oneingdufs.home.views import *
-from oneingdufs.home.forms import *
 
 urlpatterns = patterns('',
   # 首页，重定向到/home/info/
