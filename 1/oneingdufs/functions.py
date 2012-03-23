@@ -20,9 +20,11 @@ from oneingdufs import settings
 # 创建User实例并存储到数据库
 # @param {String} username 用户名，必须
 # @param {String} password 密码，必须
+# @param {String} studentId 学号，必须
+# @param {String} apn_username 在apn服务器注册的用户名
 # @param **kwargs email|is_staff|is_active|is_superuser|telnum|cornet|qq|state
 # @return {User} 返回创建成功的用户对象
-def create_user(username, password, studentId, **kwargs):
+def create_user(username, password, studentId, apn_username, **kwargs):
   now = datetime.datetime.now()
 
   # 将参数覆盖默认值
@@ -50,7 +52,7 @@ def create_user(username, password, studentId, **kwargs):
     opts['email'] = '@'.join([email_name, domain_part.lower()])
 
   # 创建User实例
-  user = User(username=username, studentId=studentId, email=opts['email'],
+  user = User(username=username, studentId=studentId, apn_username=apn_username, email=opts['email'],
               is_staff=opts['is_staff'], is_active=opts['is_active'],
               is_superuser=opts['is_superuser'], truename=opts['truename'],
               telnum=opts['telnum'], cornet=opts['cornet'], qq=opts['qq'],

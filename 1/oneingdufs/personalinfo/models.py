@@ -30,6 +30,8 @@ class Student(Profile):
   qq = models.CharField(max_length=12, null=True)
   # 状态
   state = models.CharField(max_length=10, null=True)
+  # AndroidPN用户名
+  apn_username = models.CharField(max_length=32, unique=True)
 
   def __str__(self):
     return self.truename

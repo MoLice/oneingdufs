@@ -2,7 +2,6 @@
 """oneingdufs.home.api 用户中心api
 
 @author MoLice<sf.molice@gmail.com>
-|- test 测试用
 |- register 注册
 |- login 登录
 |- logout 退出
@@ -16,7 +15,6 @@ from django.http import (
 )
 import django.utils.simplejson as json
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-from django.contrib.auth.decorators import login_required
 # project import
 from oneingdufs.decorators import apicall_validator
 # 导入form表单
@@ -26,11 +24,6 @@ import oneingdufs.functions as _fn
 # 导入模型
 import oneingdufs.personalinfo.models as pm
 import oneingdufs.administration.models as am
-
-@apicall_validator('ALL')
-def test(request, data=None):
-  #data = request.REQUEST.get('data', '{"username":"","password_re":"1","mygdufs_pwd":"1","studentId":"20","password":"1"}')
-  return HttpResponse(str(data))
 
 @apicall_validator
 def register(request, data=None):
@@ -42,7 +35,7 @@ def register(request, data=None):
   if form.is_valid():
     # 验证通过，存储用户并登陆，同时返回sessionid
     data = form.cleaned_data
-    user = _fn.create_user(username=data['username'], password=data['password'], studentId=data['studentId'])
+    user = _fn.create_user(username=data['username'], password=data['password'], studentId=data['studentId'], apn_username=data['apn_username'])
     user.save()
     atschool = pm.AtSchool(userId=user,mygdufsPwd=data['mygdufs_pwd'])
     atschool.save()

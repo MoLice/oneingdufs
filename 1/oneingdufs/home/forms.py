@@ -54,12 +54,6 @@ class Register_form(forms.Form):
         'required': 'required',
         'tabindex': '2',
       }))
-  # 重复密码
-  password_re = forms.CharField(label='重复密码', help_text='请重复你设置的个人密码',
-      widget=forms.PasswordInput(attrs={
-        'required': 'required',
-        'tabindex': '3',
-      }))
   # 关联学号
   studentId = forms.CharField(label='关联学号', help_text='请输入你的学号，以便使用学校系统提供的功能', max_length=11,
       widget=forms.TextInput(attrs={
@@ -82,7 +76,6 @@ class Register_form(forms.Form):
 
     username = cleans.get('username', None)
     password = cleans.get('password', None)
-    password_re = cleans.get('password_re', None)
     studentId = cleans.get('studentId', None)
     mygdufs_pwd = cleans.get('mygdufs_pwd', None)
 
@@ -100,12 +93,6 @@ class Register_form(forms.Form):
       if re.match(r'(^111111$|^123456$|^abcdef$|^asdfgh$)|^.{0,5}$', password) != None:
         errors['password'] = ErrorList(['密码过于简单，请尽量同时包含大小写字母、数字、符号并不少于6位'])
         del cleans['password']
-
-    if password_re != None:
-      # 验证两次输入密码是否一致
-      if password_re != password:
-        errors['password_re'] = ErrorList(['两次输入密码不一致'])
-        del cleans['password_re']
 
     if studentId != None:
       # 验证学号是否合法、已存在

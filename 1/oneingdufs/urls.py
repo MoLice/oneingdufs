@@ -14,7 +14,13 @@ urlpatterns = patterns('',
     url(r'^$', 'oneingdufs.views.index'),
     url(r'^about/$', 'oneingdufs.views.about'),
     url(r'^test/$', 'oneingdufs.views.test'),
-    url(r'^/api/getcsrftoken/$', 'oneingdufs.views.getcsrftoken'),
+)
+
+# globals api
+urlpatterns += patterns('',
+    url(r'^api/test/$', 'oneingdufs.api.test'),
+    url(r'^api/getcsrftoken/$', 'oneingdufs.api.getcsrftoken'),
+    url(r'^api/sendnotification/$', 'oneingdufs.api.sendnotification'),
 )
 
 # apps views

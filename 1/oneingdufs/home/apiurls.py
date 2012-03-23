@@ -6,7 +6,6 @@ from django.conf.urls.defaults import patterns, url
 from oneingdufs.home.api import *
 
 urlpatterns = patterns('',
-  url(r'^test/$', test),
   # 注册
   url(r'^register/$', register),
   # 登录
