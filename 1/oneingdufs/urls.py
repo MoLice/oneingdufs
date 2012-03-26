@@ -21,6 +21,7 @@ urlpatterns += patterns('',
     url(r'^api/test/$', 'oneingdufs.api.test'),
     url(r'^api/getcsrftoken/$', 'oneingdufs.api.getcsrftoken'),
     url(r'^api/sendnotification/$', 'oneingdufs.api.sendnotification'),
+    url(r'^api/updateapnusername/$', 'oneingdufs.api.updateapnusername'),
 )
 
 # apps views

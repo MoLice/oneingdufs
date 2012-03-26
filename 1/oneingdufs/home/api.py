@@ -25,58 +25,76 @@ import oneingdufs.functions as _fn
 import oneingdufs.personalinfo.models as pm
 import oneingdufs.administration.models as am
 
-@apicall_validator
-def register(request, data=None):
+def register(request):
   """/api/home/register/ 注册
   如果表单验证通过则注册用户并登录，返回username和sessionid
   如果表单验证未通过则返回表单错误信息formErrors
   """
-  form = Register_form(data)
-  if form.is_valid():
-    # 验证通过，存储用户并登陆，同时返回sessionid
-    data = form.cleaned_data
-    user = _fn.create_user(username=data['username'], password=data['password'], studentId=data['studentId'], apn_username=data['apn_username'])
-    user.save()
-    atschool = pm.AtSchool(userId=user,mygdufsPwd=data['mygdufs_pwd'])
-    atschool.save()
-    # 登录
-    return login(request, data={
-      'username': data['username'],
-      'password': data['password'],
-    })
-    # 登录用户
-    #auth_login(request, authenticate(username=user.username, password=data['password']))
-    #return HttpResponse(json.dumps({
-    #  'success': True,
-    #  'resultMsg': '注册成功并登录',
-    #  'sessionid': request.session.session_key,
-    #  'username': request.user.username,
-    #}))
-  return HttpResponse(json.dumps({
-    'success': False,
-    'resultMsg': '表单验证错误',
-    'formErrors': form.errors,
-  }))
+  if request.method == 'POST':
+    data = json.loads(request.POST.get('data', '{}'))
+    form = Register_form(data)
+    if form.is_valid():
+      if User.objects.filter(apn_username__iexact=data['apn_username']):
+        return HttpResponse(json.dumps({
+          'success': False,
+          'resultMsg': '该手机已注册过，请勿重复注册',
+        }))
+      # 验证通过，存储用户并登陆，同时返回sessionid
+      user = _fn.create_user(username=data['username'], password=data['password'], studentId=data['studentId'], apn_username=data['apn_username'])
+      user.save()
+      atschool = pm.AtSchool(userId=user,mygdufsPwd=data['mygdufs_pwd'])
+      atschool.save()
+      # 登录
+      return login(request, data={
+        'username': data['username'],
+        'password': data['password'],
+      })
+      # 登录用户
+      #auth_login(request, authenticate(username=user.username, password=data['password']))
+      #return HttpResponse(json.dumps({
+      #  'success': True,
+      #  'resultMsg': '注册成功并登录',
+      #  'sessionid': request.session.session_key,
+      #  'username': request.user.username,
+      #}))
+    return HttpResponse(json.dumps({
+      'success': False,
+      'resultMsg': '表单验证错误1',
+      'formErrors': form.errors,
+      'data': data,
+    }))
+  else:
+    return HttpResponse(json.dumps({
+      'success': False,
+      'resultMsg': '请求方式出错，只能为POST',
+    }))
 
-@apicall_validator
 def login(request, data=None):
   """/api/home/login/ 登录
   登录成功则返回sessionid和username，表单验证失败则返回formErrors
   """
-  form = Login_form(data)
-  if form.is_valid():
-    auth_login(request, form.get_user())
+  if request.method == 'POST':
+    if data == None:
+      data = json.loads(request.POST.get('data', '{}'))
+    form = Login_form(data=data)
+    if form.is_valid():
+      auth_login(request, authenticate(username=data.get('username', ''), password=data.get('password', '')))
+      return HttpResponse(json.dumps({
+        'success': True,
+        'resultMsg': '登录成功',
+        'sessionid': request.session.session_key,
+        'username': request.user.username,
+      }))
     return HttpResponse(json.dumps({
-      'success': True,
-      'resultMsg': '登录成功',
-      'sessionid': request.sessionid.session_key,
-      'username': request.user.username,
+      'success': False,
+      'resultMsg': '表单验证错误2',
+      'formErrors': form.errors,
     }))
-  return HttpResponse(json.dumps({
-    'success': False,
-    'resultMsg': '表单验证错误',
-    'formErrors': form.errors,
-  }))
+  else:
+    return HttpResponse(json.dumps({
+      'success': False,
+      'resultMsg': '请求方式出错，只能为POST',
+    }))
 
 @apicall_validator('ALL')
 def logout(request, data=None):

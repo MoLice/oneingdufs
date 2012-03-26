@@ -32,10 +32,6 @@ class Login_form(AuthenticationForm):
         'required': 'required',
         'tabindex': '2',
       }))
-  rememberme = forms.BooleanField(label='记住我', required=False,
-      widget=forms.CheckboxInput(attrs={
-        'tabindex': '3',
-      }))
 
 class Register_form(forms.Form):
   """注册表单"""

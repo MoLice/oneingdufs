@@ -48,21 +48,6 @@ def about(request):
   return render_to_response('globals/about.html')
 
 def test(request):
-  url="http://localhost:7070/notification.do?action=send"
-  query = {
-    'broadcast': 'Y',
-    'username': '',
-    'title': 'From Django',
-    'message': 'hello world',
-    'uri': '',
-  }
-  data = urllib.urlencode(query)
-  request = urllib2.Request(url, data)
-  #request.add_header('Cookie', 'JSESSIONID=6l94xiargbfs1hfgek5mnyd6w;')
-  try:
-    response = urllib2.urlopen(request)
-    result = response.read()
-    return HttpResponse(result)
-  except urllib2.URLError, e:
-    return HttpResponse('error, ' + str(e))
-  return HttpResponse(request.META.get("X_TYPE", "null"))
+  request.user.truename = "陈某某"
+  request.user.save()
+  return HttpResponse(request.user.truename)

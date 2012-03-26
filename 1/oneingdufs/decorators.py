@@ -11,7 +11,7 @@ from django.http import (
 )
 import django.utils.simplejson as json
 
-# {str}method POST|GET|ALL
+# {str}method POST|GET|ALL，即便不传参，也应该把括号写上
 def apicall_validator(method='POST'):
   """所有/api/请求均必须添加的decorator，共完成以下功能：
   1、检查是否符合调用api的条件（COOKIES必须包含32位的sessionid和csrftoken，也即必须处于登录状态；POST头部必须包含X-CSRFToken）
@@ -54,8 +54,10 @@ def apicall_validator(method='POST'):
               'resultMsg': '请求数据为空',
             }))
           # POST请求验证通过，返回view函数
-          return fn(request, data=json.loads(request.POST['data']))
+          #return fn(request, data=json.loads(request.POST['data']))
+          return fn(*args, **kvargs)
         # GET请求不用验证，直接返回view函数
-        return fn(request, data=json.loads(request.REQUEST.get('data', '{}')))
+        #return fn(request, data=json.loads(request.REQUEST.get('data', '{}')))
+        return fn(*args, **kvargs)
     return validator
   return wrapper

@@ -5,6 +5,7 @@
 |- test 测试用
 |- getcsrftoken 通过cookie获取csrftoken
 |- sendnotification 发送notification到AndroidPN
+|- updateapnusername 客户端重连或者重新注册用户时，更新该用户名到关联账号
 """
 
 from django.http import (
@@ -27,7 +28,7 @@ def test(request, data=None):
   return HttpResponse(str(data))
 
 # 无需登录
-def getcsrftoken(request, data=None):
+def getcsrftoken(request):
   """/api/getcsrftoken/ 提供客户端从Set-Cookie头部中获取csrftoken
   出于节省流量的考虑，返回数据尽量压缩体积
   """
@@ -50,7 +51,7 @@ def sendnotification(request, data=None):
     'username': '57cdfca236ab4cddba1fd81d200a26b3', # 要发送到的用户的APN用户名
     'title': 'from=MoLice;date=应用服务器当前时间;type=上面的type值;title=消息标题;', # 这些字段在Android客户端进行解析
     'message': '消息正文',
-    'uri': '', # 不允许Android客户端发送uri
+    'uri': '', # 不允许Android客户端发送uri，可以http:、https:、tel:、geo:开头
   }
   """
   # AndroidPN服务器地址
@@ -72,7 +73,7 @@ def sendnotification(request, data=None):
   send_msg = {
     'broadcast': 'N',
     'username': User.objects.get(username=data['to']).apn_username,
-    'title': 'from=%s;date=%s;type=%s;title=%s;' % (request.user.username, current_time, data['type'], data['title'],)),
+    'title': 'from=%s;date=%s;type=%s;title=%s;' % (request.user.username, current_time, data['type'], data['title'],),
     'message': data['message'],
     'uri': '',
   }
@@ -91,3 +92,19 @@ def sendnotification(request, data=None):
       'success': False,
       'resultMsg': '连接APN出错, ' + str(e),
     }))
+
+# 无需登录
+def updateapnusername(request):
+  """/api/updateapnusername/ 客户端重连或者重新注册用户时，更新该用户名到关联账号"""
+  data = json.loads(request.REQUEST.get('data', '{}'))
+  if data['username']:
+    request.user.apn_username = data['username']
+    request.user.save()
+    return HttpResponse(json.dumps({
+      'success': True,
+      'resultMsg': '更新成功',
+    }))
+  return HttpResponse(json.dumps({
+    'success': False,
+    'resultMsg': '更新失败',
+  }))

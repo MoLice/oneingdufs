@@ -31,7 +31,7 @@ class Student(Profile):
   # 状态
   state = models.CharField(max_length=10, null=True)
   # AndroidPN用户名
-  apn_username = models.CharField(max_length=32, unique=True)
+  apn_username = models.CharField(max_length=32, null=True)
 
   def __str__(self):
     return self.truename
