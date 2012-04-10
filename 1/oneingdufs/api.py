@@ -21,11 +21,9 @@ from django.contrib.auth.models import User
 # project import
 from oneingdufs.decorators import apicall_validator
 
-@apicall_validator('ALL')
 def test(request, data=None):
-  #data = request.REQUEST.get('data', '{"username":"","password_re":"1","mygdufs_pwd":"1","studentId":"20","password":"1"}')
-  return HttpResponse(request.META.get('HTTP_COOKIE', 'null'))
-  return HttpResponse(str(data))
+  data = request.REQUEST.get('data', '{"username":"","resultMsg":"do","password_re":"1","mygdufs_pwd":"1","studentId":"20","password":"1"}')
+  return HttpResponse(data)
 
 # 无需登录
 def getcsrftoken(request):
