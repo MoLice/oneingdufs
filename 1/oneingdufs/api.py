@@ -32,7 +32,7 @@ def getcsrftoken(request):
   """
   return HttpResponse('{}')
 
-@apicall_validator
+@apicall_validator()
 def sendnotification(request, data=None):
   """/api/sendnotification/ 接收客户端发来的消息，将其转发到AndroidPN服务器，由APN推送到目标机器
   客户端发送来的消息规格:

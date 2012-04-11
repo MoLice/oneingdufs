@@ -31,6 +31,7 @@ urlpatterns += patterns('',
   url(r'^api/home/', include('oneingdufs.home.apiurls')),
   # life
   url(r'^life/', include('oneingdufs.life.urls')),
+  url(r'^api/life/', include('oneingdufs.life.apiurls')),
 )
 
 # 静态文件访问

@@ -1,7 +1,7 @@
 # coding=utf-8
 """oneingdufs.life.models 校园生活模型
+|- Life 在校生活相关的个人数据
 |- Card 校园卡
-|- Water 订水
 
 @author: MoLice<sf.molice@gmail.com>
 """
@@ -9,6 +9,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 # project import
+
+class Life(models.Model):
+  """在校生活相关的个人数据"""
+  # TODO 使用meta内部类增加字段验证
+  # 用户id
+  userId = models.ForeignKey(User)
+  # 栋，例：13，范围：1-13
+  building = models.CharField(max_length=2)
+  # 宿舍号，例：507，范围：2??-7??
+  room = models.CharField(max_length=3)
 
 class Card(models.Model):
   """校园卡"""

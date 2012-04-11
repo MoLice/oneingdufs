@@ -49,14 +49,6 @@ def register(request):
         'username': data['username'],
         'password': data['password'],
       })
-      # 登录用户
-      #auth_login(request, authenticate(username=user.username, password=data['password']))
-      #return HttpResponse(json.dumps({
-      #  'success': True,
-      #  'resultMsg': '注册成功并登录',
-      #  'sessionid': request.session.session_key,
-      #  'username': request.user.username,
-      #}))
     return HttpResponse(json.dumps({
       'success': False,
       'resultMsg': '表单验证错误1',

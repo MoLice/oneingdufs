@@ -54,10 +54,10 @@ def apicall_validator(method='POST'):
               'resultMsg': '请求数据为空',
             }))
           # POST请求验证通过，返回view函数
-          #return fn(request, data=json.loads(request.POST['data']))
-          return fn(*args, **kvargs)
+          return fn(request, data=json.loads(request.POST['data']))
+          #return fn(*args, **kvargs)
         # GET请求不用验证，直接返回view函数
-        #return fn(request, data=json.loads(request.REQUEST.get('data', '{}')))
-        return fn(*args, **kvargs)
+        return fn(request, data=json.loads(request.REQUEST.get('data', '{}')))
+        #return fn(*args, **kvargs)
     return validator
   return wrapper
