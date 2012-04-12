@@ -1,5 +1,5 @@
 # coding=utf-8
-"""oneingdufs.life.api 在校生活
+"""oneingdufs.life.api 校园生活api
 
 @author MoLice<sf.molice@gmail.com>
 |- roomaddress 宿舍地址

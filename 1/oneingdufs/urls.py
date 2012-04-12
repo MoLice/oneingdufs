@@ -24,7 +24,7 @@ urlpatterns += patterns('',
     url(r'^api/updateapnusername/$', 'oneingdufs.api.updateapnusername'),
 )
 
-# apps views
+# apps
 urlpatterns += patterns('',
   # home
   url(r'^home/', include('oneingdufs.home.urls')),
@@ -32,6 +32,9 @@ urlpatterns += patterns('',
   # life
   url(r'^life/', include('oneingdufs.life.urls')),
   url(r'^api/life/', include('oneingdufs.life.apiurls')),
+  # study
+  url(r'^study/', include('oneingdufs.study.urls')),
+  url(r'^api/study/', include('oneingdufs.study.apiurls')),
 )
 
 # 静态文件访问

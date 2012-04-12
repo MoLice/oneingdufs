@@ -8,7 +8,7 @@ from oneingdufs.life.views import *
 urlpatterns = patterns('',
   # 首页
   url(r'^$', index),
-  url(r'^card/', card),
-  url(r'^water/', water),
-  url(r'^fix/', fix),
+  url(r'^card/$', card),
+  url(r'^water/$', water),
+  url(r'^fix/$', fix),
 )

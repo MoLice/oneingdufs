@@ -1,5 +1,5 @@
 # coding=utf-8
-"""oneingdufs.life.apiurls 在校生活api urls"""
+"""oneingdufs.life.apiurls 校园生活api urls"""
 
 from django.conf.urls.defaults import patterns, url
 # project import
