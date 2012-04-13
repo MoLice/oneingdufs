@@ -18,7 +18,7 @@ from django.contrib.auth.models import User, Group
 from oneingdufs import settings
 
 # 创建User实例并存储到数据库
-# @example create_user(username='username', 'password'='123', studentId='2008', apn_username='123', groups=[])
+# @example create_user(username='username', password='123', studentId='2008', apn_username='123', groups=[])
 # @param {String} username 用户名，必须
 # @param {String} password 密码，必须
 # @param {String} studentId 学号，必须
@@ -60,16 +60,17 @@ def create_user(username, password, studentId, apn_username, **kwargs):
               last_login=now, date_joined=now)
   # 设置密码
   user.set_password(password)
+  # 存储用户
+  user.save()
 
   # 添加群组
   if len(opts['groups']) > 0:
     groups = opts['groups']
     for gId in groups:
       g = Group.objects.filter(id=gId)
-      if g.count() != 0:
-        user.groups.add(g)
-
-  # 存储用户
+      if g.count() == 1:
+        user.groups.add(g[0])
+  # 存储ManyToMany关系
   user.save()
 
   return user

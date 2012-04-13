@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^$', 'oneingdufs.views.index'),
     url(r'^about/$', 'oneingdufs.views.about'),
     url(r'^test/$', 'oneingdufs.views.test'),
+    url(r'^manage/$', 'oneingdufs.views.manage'),
 )
 
 # globals api

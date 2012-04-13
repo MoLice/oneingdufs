@@ -4,6 +4,8 @@
 @author MoLice<sf.molice@gmail.com>
 |- index 全站首页
 |- about 关于
+|- manage 管理工具集
+|- test 测试
 """
 
 from django.http import (
@@ -17,7 +19,7 @@ import urllib2
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 # project import
 import oneingdufs.functions as _fn
 from oneingdufs.home.forms import Login_form
@@ -46,6 +48,31 @@ def about(request):
   包括本站、制作人员等
   """
   return render_to_response('globals/about.html')
+
+def manage(request):
+  """管理工具集，包括测试信息的添加等操作"""
+  if request.GET.get('token', '') == 'molice':
+    # 验证成功
+    progress = {'group':False,'user':False}
+    result = ''
+    # 增加群组
+    if not Group.objects.filter(name__iexact='校学生会'):
+      Group(name='学生后勤服务信息中心').save()
+      Group(name='校学生会').save()
+      Group(name='08计算机4班').save()
+      progress['group'] = True
+      result += '添加群组成功；'
+    else:
+      result += '群组已存在；'
+    # 增加用户
+    if not User.objects.filter(username__iexact='molice'):
+      user = _fn.create_user(username='molice', password='tobethesame', studentId='20081000139', apn_username='', groups=[1,2,3])
+      progress['user'] = True
+      result += '添加molice成功'
+    else:
+      result += 'molice已存在'
+    return HttpResponse(result)
+  return HttpResponse('无权限')
 
 def test(request):
   import oneingdufs.life.forms as f
