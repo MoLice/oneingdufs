@@ -28,13 +28,8 @@ class Student(Profile):
   cornet = models.CharField(max_length=10, null=True)
   # qq
   qq = models.CharField(max_length=12, null=True)
-  # 状态
-  state = models.CharField(max_length=10, null=True)
   # AndroidPN用户名
   apn_username = models.CharField(max_length=32, null=True)
-
-  def __str__(self):
-    return self.truename
 
 class AtSchool(models.Model):
   """在校的个人信息，行政档案方面的"""
@@ -46,7 +41,7 @@ class AtSchool(models.Model):
   # 用户，与用户表关联
   userId = models.ForeignKey(User)
   # 数字广外密码
-  mygdufsPwd = models.CharField(max_length=20)
+  mygdufs_pwd = models.CharField(max_length=20)
   # 出生年月
   born = models.DateField(null=True)
   # 入学年月
@@ -55,6 +50,3 @@ class AtSchool(models.Model):
   classId = models.ForeignKey(ClassList, null=True)
   # 身份
   identity = models.CharField(max_length=1, choices=IDENTITY_CHOICES, default='0')
-
-  def __str__(self):
-    return self.userId

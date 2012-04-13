@@ -48,6 +48,6 @@ def about(request):
   return render_to_response('globals/about.html')
 
 def test(request):
-  request.user.truename = "陈某某"
-  request.user.save()
-  return HttpResponse(request.user.truename)
+  import oneingdufs.life.forms as f
+  template_val = {'form': f.GdufsLife()}
+  return render_to_response('life/gdufslife.html', template_val)

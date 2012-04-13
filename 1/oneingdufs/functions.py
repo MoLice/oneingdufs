@@ -13,16 +13,17 @@ import re
 import urlparse
 import urllib
 import urllib2
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 # project import
 from oneingdufs import settings
 
 # 创建User实例并存储到数据库
+# @example create_user(username='username', 'password'='123', studentId='2008', apn_username='123', groups=[])
 # @param {String} username 用户名，必须
 # @param {String} password 密码，必须
 # @param {String} studentId 学号，必须
 # @param {String} apn_username 在apn服务器注册的用户名
-# @param **kwargs email|is_staff|is_active|is_superuser|telnum|cornet|qq|state
+# @param **kwargs email|is_staff|is_active|is_superuser|telnum|cornet|qq|groups
 # @return {User} 返回创建成功的用户对象
 def create_user(username, password, studentId, apn_username, **kwargs):
   now = datetime.datetime.now()
@@ -37,7 +38,7 @@ def create_user(username, password, studentId, apn_username, **kwargs):
     'telnum': None,
     'cornet': None,
     'qq': None,
-    'state': None,
+    'groups': [],
   }
   for arg in kwargs:
     if arg in opts:
@@ -56,9 +57,17 @@ def create_user(username, password, studentId, apn_username, **kwargs):
               is_staff=opts['is_staff'], is_active=opts['is_active'],
               is_superuser=opts['is_superuser'], truename=opts['truename'],
               telnum=opts['telnum'], cornet=opts['cornet'], qq=opts['qq'],
-              state=opts['state'], last_login=now, date_joined=now)
+              last_login=now, date_joined=now)
   # 设置密码
   user.set_password(password)
+
+  # 添加群组
+  if len(opts['groups']) > 0:
+    groups = opts['groups']
+    for gId in groups:
+      g = Group.objects.filter(id=gId)
+      if g.count() != 0:
+        user.groups.add(g)
 
   # 存储用户
   user.save()

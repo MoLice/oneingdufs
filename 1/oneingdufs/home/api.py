@@ -15,6 +15,7 @@ from django.http import (
 )
 import django.utils.simplejson as json
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth.models import Group
 # project import
 from oneingdufs.decorators import apicall_validator
 # 导入form表单
@@ -29,6 +30,21 @@ def register(request):
   """/api/home/register/ 注册
   如果表单验证通过则注册用户并登录，返回username和sessionid
   如果表单验证未通过则返回表单错误信息formErrors
+  接收data结构：
+    {
+      'username': '',
+      'password': '',
+      'studentId': '',
+      'mygdufs_pwd': '',
+      'groups': [1,2,3],//非必须，群组的id
+    }
+  返回data结构：
+    {
+      'success': True,
+      'resultMsg': '',
+      'sessionid': '',
+      'username': ''
+    }
   """
   if request.method == 'POST':
     data = json.loads(request.POST.get('data', '{}'))
@@ -40,9 +56,8 @@ def register(request):
           'resultMsg': '该手机已注册过，请勿重复注册',
         }))
       # 验证通过，存储用户并登陆，同时返回sessionid
-      user = _fn.create_user(username=data['username'], password=data['password'], studentId=data['studentId'], apn_username=data['apn_username'])
-      user.save()
-      atschool = pm.AtSchool(userId=user,mygdufsPwd=data['mygdufs_pwd'])
+      user = _fn.create_user(username=data['username'], password=data['password'], studentId=data['studentId'], apn_username=data['apn_username'], groups=data.get('groups', []))
+      atschool = pm.AtSchool(userId=user,mygdufs_pwd=data['mygdufs_pwd'])
       atschool.save()
       # 登录
       return login(request, data={
@@ -64,6 +79,8 @@ def register(request):
 def login(request, data=None):
   """/api/home/login/ 登录
   登录成功则返回sessionid和username，表单验证失败则返回formErrors
+  接收data结构：{'username':'', 'password': ''}
+  返回data结构：{'success': True, 'resultMsg': '', 'sessionid': '', 'username': ''}
   """
   if request.method == 'POST':
     if data == None:

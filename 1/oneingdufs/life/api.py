@@ -4,6 +4,7 @@
 @author MoLice<sf.molice@gmail.com>
 |- roomaddress 宿舍地址
 |- card 校园卡
+|- gdufslife 后勤留言
 """
 
 import re
@@ -17,6 +18,8 @@ import django.utils.simplejson as json
 from oneingdufs.decorators import apicall_validator
 # 引入模型
 import oneingdufs.life.models as lm
+# 引入表单
+import oneingdufs.life.forms as lf
 
 @apicall_validator('ALL')
 def roomaddress(request, data=None):
@@ -57,4 +60,45 @@ def card(request, data=None):
   return HttpResponse(json.dumps({
     'success': False,
     'resultMsg': '读取失败，请稍后重试'
+  }))
+
+@apicall_validator('ALL')
+def gdufslife(request, data=None):
+  """后勤留言
+  
+  接收data格式：
+  {
+    'title': '',
+    'content': '',
+    'name': '',
+    'email': '',
+    'campus': '',
+    'types': '',
+  }
+  返回data格式：
+  {
+    'success': True,
+    'resultMsg': '',
+  }
+  """
+  form = lf.GdufsLife(data)
+  if form.is_valid():
+    data = form.cleaned_data
+    # 存入数据库
+    record = lm.GdufsLife(
+        userId=request.user,
+        title=data['title'],
+        content=data['content'],
+        email=data['email'],
+        campus=data['campus'],
+        types=data['types']).save()
+    # TODO 使用APN发送通知给后勤中心人员的账号
+    return HttpResponse(json.dumps({
+      'success': True,
+      'resultMsg': '提交成功',
+    }))
+  return HttpResponse(json.dumps({
+    'success': False,
+    'resultMsg': '表单验证失败',
+    'formErrors': form.errors,
   }))

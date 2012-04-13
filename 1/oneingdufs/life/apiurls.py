@@ -10,4 +10,6 @@ urlpatterns = patterns('',
   url(r'^roomaddress/$', roomaddress),
   # 校园卡
   url(r'^card/$', card),
+  # 后勤留言
+  url(r'^gdufslife/$', gdufslife),
 )
