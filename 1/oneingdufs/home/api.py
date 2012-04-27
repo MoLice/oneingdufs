@@ -24,7 +24,7 @@ from oneingdufs.home.forms import *
 import oneingdufs.functions as _fn
 # 导入模型
 import oneingdufs.personalinfo.models as pm
-import oneingdufs.administration.models as am
+import oneingdufs.common.models as am
 
 def register(request):
   """/api/home/register/ 注册

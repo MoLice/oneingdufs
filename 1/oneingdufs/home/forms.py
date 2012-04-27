@@ -16,7 +16,7 @@ from django.contrib.auth.forms import AuthenticationForm
 # 自定义表单
 import oneingdufs.forms as _fm
 import oneingdufs.functions as _fn
-from oneingdufs.administration.models import *
+from oneingdufs.common.models import *
 
 class Login_form(AuthenticationForm):
   """登录表单"""

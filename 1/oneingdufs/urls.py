@@ -21,7 +21,6 @@ urlpatterns = patterns('',
 urlpatterns += patterns('',
     url(r'^api/test/$', 'oneingdufs.api.test'),
     url(r'^api/getcsrftoken/$', 'oneingdufs.api.getcsrftoken'),
-    url(r'^api/sendnotification/$', 'oneingdufs.api.sendnotification'),
     url(r'^api/updateapnusername/$', 'oneingdufs.api.updateapnusername'),
 )
 
@@ -36,6 +35,12 @@ urlpatterns += patterns('',
   # study
   url(r'^study/', include('oneingdufs.study.urls')),
   url(r'^api/study/', include('oneingdufs.study.apiurls')),
+  # common
+  url(r'^common/', include('oneingdufs.common.urls')),
+  url(r'^api/common/', include('oneingdufs.common.apiurls')),
+  # message
+  url(r'^message/', include('oneingdufs.message.urls')),
+  url(r'^api/message/', include('oneingdufs.message.apiurls')),
 )
 
 # 静态文件访问

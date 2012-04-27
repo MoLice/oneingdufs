@@ -11,7 +11,7 @@ from django.db import models
 from django.contrib.auth.models import User
 # project import
 from oneingdufs.models import Profile
-from oneingdufs.administration.models import ClassList
+from oneingdufs.common.models import ClassList
 
 class Student(Profile):
   """用户模型，以学生为角色设计

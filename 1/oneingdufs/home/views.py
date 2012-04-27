@@ -32,7 +32,7 @@ from oneingdufs.home.forms import *
 import oneingdufs.functions as _fn
 # 导入模型
 import oneingdufs.personalinfo.models as pm
-import oneingdufs.administration.models as am
+import oneingdufs.common.models as cm
 
 @login_required
 def index(request):
@@ -144,8 +144,8 @@ def atschool(request):
     choices = {}
     # 假如存在班级id则读取对应的学院班级专业值及候选项
     if pm_atschool.classId:
-      pm_major = am.Major.objects.get(id=pm_atschool.classId.id)
-      pm_faculty = am.Faculty.objects.get(id=pm_major.facultyId.id)
+      pm_major = cm.Major.objects.get(id=pm_atschool.classId.id)
+      pm_faculty = cm.Faculty.objects.get(id=pm_major.facultyId.id)
       # set choices
       choices = {
           'major': _fn.getChoicesTuple(Major, foreignKey=('facultyId', str(pm_faculty.id),)),

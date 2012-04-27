@@ -23,7 +23,7 @@ from django.contrib.auth.models import User, Group
 # project import
 import oneingdufs.functions as _fn
 from oneingdufs.home.forms import Login_form
-from oneingdufs.administration.models import *
+from oneingdufs.common.models import *
 
 def index(request):
   """网站首页

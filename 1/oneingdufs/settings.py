@@ -121,7 +121,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
 
-    'oneingdufs.administration',
+    'oneingdufs.message',
+    'oneingdufs.common',
     'oneingdufs.personalinfo',
     'oneingdufs.life',
     'oneingdufs.home',
