@@ -29,7 +29,8 @@ def apicall_validator(method='POST'):
     def validator(*args, **kvargs):
       # 检查是否已登录
       request = args[0]
-      if len(request.COOKIES.get('sessionid', '')) != 32 or len(request.COOKIES.get('csrftoken', '')) != 32:
+      if not request.user.is_authenticated():
+      #if len(request.COOKIES.get('sessionid', '')) != 32 or len(request.COOKIES.get('csrftoken', '')) != 32:
         return HttpResponse(json.dumps({
           'success': False,
           'resultMsg': '请先登录',

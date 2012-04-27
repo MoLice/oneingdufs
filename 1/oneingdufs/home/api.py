@@ -24,6 +24,7 @@ from oneingdufs.home.forms import *
 import oneingdufs.functions as _fn
 # 导入模型
 import oneingdufs.personalinfo.models as pm
+import oneingdufs.life.models as lm
 import oneingdufs.common.models as am
 
 def register(request):
@@ -66,7 +67,7 @@ def register(request):
       })
     return HttpResponse(json.dumps({
       'success': False,
-      'resultMsg': '表单验证错误1',
+      'resultMsg': '表单验证错误',
       'formErrors': form.errors,
       'data': data,
     }))
@@ -79,8 +80,30 @@ def register(request):
 def login(request, data=None):
   """/api/home/login/ 登录
   登录成功则返回sessionid和username，表单验证失败则返回formErrors
-  接收data结构：{'username':'', 'password': ''}
-  返回data结构：{'success': True, 'resultMsg': '', 'sessionid': '', 'username': ''}
+  接收data结构：
+    {
+      'username':'',
+      'password': '',
+    }
+  返回data结构：
+    {
+      'success': True,
+      'resultMsg': '登录成功',
+      'sessionid': '',
+      'username': '',
+      'studentId': '',
+      'user_info': {
+        'email': '',
+        'truename': '',
+        'phone': '',
+        'cornet': '',
+        'qq': '',
+      },
+      'user_roomaddress': {
+        'building': '',
+        'room': '',
+      },
+    }
   """
   if request.method == 'POST':
     if data == None:
@@ -88,17 +111,40 @@ def login(request, data=None):
     form = Login_form(data=data)
     if form.is_valid():
       auth_login(request, authenticate(username=data.get('username', ''), password=data.get('password', '')))
-      return HttpResponse(json.dumps({
+      user = request.user
+      result = {
         'success': True,
         'resultMsg': '登录成功',
         'sessionid': request.session.session_key,
-        'username': request.user.username,
+        'username': user.username,
+        'studentId': user.studentId,
+        'user_info': {
+          'email': '' if user.email == None else user.email,
+          'truename': '' if user.truename == None else user.truename,
+          'phone': '' if user.phone == None else user.phone,
+          'cornet': '' if user.cornet == None else user.cornet,
+          'qq': '' if user.qq == None else user.qq,
+        },
+        'user_roomaddress': {},
+      }
+      life = lm.Life.objects.filter(userId=user)
+      if len(life) != 0:
+        result['user_roomaddress']['building'] = life[0].building
+        result['user_roomaddress']['room'] = life[0].room
+      return HttpResponse(json.dumps(result))
+    else:
+      # 表单验证错误，用户名或密码不正确
+      if not User.objects.filter(username__iexact=data.get('username', '')):
+        return HttpResponse(json.dumps({
+          'success': False,
+          'resultMsg': '该昵称不存在，请检查输入或注册新账号',
+          'formErrors': form.errors,
+        }))
+      return HttpResponse(json.dumps({
+        'success': False,
+        'resultMsg': '密码错误',
+        'formErrors': form.errors,
       }))
-    return HttpResponse(json.dumps({
-      'success': False,
-      'resultMsg': '表单验证错误2',
-      'formErrors': form.errors,
-    }))
   else:
     return HttpResponse(json.dumps({
       'success': False,
@@ -119,22 +165,22 @@ def info(request, data=None):
   """/api/home/info/ 个人信息表单
   GET: 返回用户数据formData
   POST: 保存成功则返回success=True，表单验证失败则返回formErrors
+  接收的data结构：
+    {
+      'email': '',
+      'truename': '',
+      'phone': '',
+      'cornet': '',
+      'qq': '',
+    }
+  返回的data结构：
+    {
+      'success': True,
+      'resultMsg': '保存成功',
+    }
   """
   user = request.user
-  if request.method == 'GET':
-    # 读取用户数据并返回
-    return HttpResponse(json.dumps({
-      'success': True,
-      'resultMsg': '读取成功',
-      'username': user.username,
-      'studentId': user.studentId,
-      'formData': {
-        'email': user.email,
-        'truename': user.truename,
-        'telnum': user.telnum,
-        'cornet': user.cornet,
-        'qq': user.qq,
-      }}))
+  
   # 保存表单数据
   form = Info_form(data=data, user=user)
   if form.is_valid():
@@ -142,7 +188,7 @@ def info(request, data=None):
     # user对象无法迭代，无法使用['key']方式访问，因此只能一个一个写
     user.email = data['email']
     user.truename = data['truename']
-    user.telnum = data['telnum']
+    user.phone = data['phone']
     user.cornet = data['cornet']
     user.qq = data['qq']
     user.save()

@@ -107,7 +107,7 @@ def info(request):
     template_val['form'] = Info_form(initial={
       "email": user.email,
       "truename": user.truename,
-      "telnum": user.telnum,
+      "phone": user.phone,
       "cornet": user.cornet,
       "qq": user.qq,
     })
@@ -122,7 +122,7 @@ def info(request):
       # user无法迭代，无法使用key方式访问，只能一个一个写
       user.email = data['email']
       user.truename = data['truename']
-      user.telnum = data['telnum']
+      user.phone = data['phone']
       user.cornet = data['cornet']
       user.qq = data['qq']
       user.save()

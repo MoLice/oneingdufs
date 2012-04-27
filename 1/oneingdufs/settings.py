@@ -6,6 +6,8 @@ from os import environ
 
 # 自定义变量
 PRO_PATH = os.path.dirname(__file__) # 项目的绝对路径
+# APN服务器配置
+APN_FORM_URL = 'http://localhost:7070/notification.do?action=send'
 
 # 项目的登录退出url
 LOGIN_URL = '/home/login/'

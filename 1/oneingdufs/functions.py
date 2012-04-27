@@ -23,7 +23,7 @@ from oneingdufs import settings
 # @param {String} password 密码，必须
 # @param {String} studentId 学号，必须
 # @param {String} apn_username 在apn服务器注册的用户名
-# @param **kwargs email|is_staff|is_active|is_superuser|telnum|cornet|qq|groups
+# @param **kwargs email|is_staff|is_active|is_superuser|phone|cornet|qq|groups
 # @return {User} 返回创建成功的用户对象
 def create_user(username, password, studentId, apn_username, **kwargs):
   now = datetime.datetime.now()
@@ -35,7 +35,7 @@ def create_user(username, password, studentId, apn_username, **kwargs):
     'is_active': True,
     'is_superuser': False,
     'truename': None,
-    'telnum': None,
+    'phone': None,
     'cornet': None,
     'qq': None,
     'groups': [],
@@ -56,7 +56,7 @@ def create_user(username, password, studentId, apn_username, **kwargs):
   user = User(username=username, studentId=studentId, apn_username=apn_username, email=opts['email'],
               is_staff=opts['is_staff'], is_active=opts['is_active'],
               is_superuser=opts['is_superuser'], truename=opts['truename'],
-              telnum=opts['telnum'], cornet=opts['cornet'], qq=opts['qq'],
+              phone=opts['phone'], cornet=opts['cornet'], qq=opts['qq'],
               last_login=now, date_joined=now)
   # 设置密码
   user.set_password(password)

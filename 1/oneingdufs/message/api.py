@@ -16,6 +16,7 @@ import urllib2
 import django.utils.simplejson as json
 from django.contrib.auth.models import User
 # project import
+import oneingdufs.settings as _s
 from oneingdufs.decorators import apicall_validator
 
 @apicall_validator()
@@ -37,8 +38,6 @@ def index(request, data=None):
     'uri': '', # 不允许Android客户端发送uri，可以http:、https:、tel:、geo:开头
   }
   """
-  # AndroidPN控制页面地址
-  apn_url = 'http://localhost:7070/notification.do?action=send'
   # 当前时间
   current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
   
@@ -62,7 +61,7 @@ def index(request, data=None):
   }
   # 发送数据到AndroidPN服务器
   send_data = urllib.urlencode(send_msg)
-  send_request = urllib2.Request(apn_url, send_data)
+  send_request = urllib2.Request(_s.APN_FORM_URL, send_data)
   try:
     send_response = urllib2.urlopen(send_request)
     send_result = send_response.read()

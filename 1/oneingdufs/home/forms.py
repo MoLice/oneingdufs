@@ -133,7 +133,7 @@ class Info_form(forms.Form):
         'tabindex': '2',
       }))
   # 手机
-  telnum = forms.CharField(label='手机', help_text='11位数字，添加手机号能让同学们方便地找到你',
+  phone = forms.CharField(label='手机', help_text='11位数字，添加手机号能让同学们方便地找到你',
       max_length=11, required=False,
       widget=_fm.TelInput(attrs={
         'maxlength': '11',
@@ -165,7 +165,7 @@ class Info_form(forms.Form):
 
     email = cleans.get('email', None)
     truename = cleans.get('truename', None)
-    telnum = cleans.get('telnum', None)
+    phone = cleans.get('phone', None)
     cornet = cleans.get('cornet', None)
     qq = cleans.get('cornet', None)
 
@@ -176,7 +176,7 @@ class Info_form(forms.Form):
         del errors['truename']
 
     # 验证4个字段是否有改动或unique
-    tmplist = ['email', 'telnum', 'cornet', 'qq',]
+    tmplist = ['email', 'phone', 'cornet', 'qq',]
     for value in tmplist:
       if not cleans.get(value, None) or self._nochange(value, cleans):
         # 提交值为空或无变动，可跳过该字段的下一步验证
@@ -187,11 +187,11 @@ class Info_form(forms.Form):
           errors[value] = ErrorList(['该%s已被关联' % value])
           del cleans[value]
 
-    if telnum != None:
+    if phone != None:
       # 验证手机号是否合法
-      if not re.match(r'^(\d{11})*$', telnum):
-        errors['telnum'] = ErrorList(['手机号码必须为11位纯数字'])
-        del cleans['telnum']
+      if not re.match(r'^(\d{11})*$', phone):
+        errors['phone'] = ErrorList(['手机号码必须为11位纯数字'])
+        del cleans['phone']
 
     if cornet != None:
       # 验证短号是否合法
@@ -213,7 +213,7 @@ class Info_form(forms.Form):
     user = self.user
     result = {
       'email': user.email and user.email == cleans['email'],
-      'telnum': user.telnum and user.telnum == cleans['telnum'],
+      'phone': user.phone and user.phone == cleans['phone'],
       'cornet': user.cornet and user.cornet == cleans['cornet'],
       'qq': user.qq and user.qq == cleans['qq'],
     }
