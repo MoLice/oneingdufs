@@ -14,4 +14,6 @@ urlpatterns = patterns('',
   url(r'^logout/$', logout),
   # 个人信息
   url(r'^info/$', info),
+  # 获取团体信息
+  url(r'^group/$', group),
 )

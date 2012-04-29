@@ -6,6 +6,7 @@
 |- login 登录
 |- logout 退出
 |- info 个人信息表单
+|- group 我的团体
 """
 
 from django.http import (
@@ -13,6 +14,7 @@ from django.http import (
   HttpResponse,
   HttpResponseRedirect,
 )
+import time
 import django.utils.simplejson as json
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import Group
@@ -37,6 +39,7 @@ def register(request):
       'password': '',
       'studentId': '',
       'mygdufs_pwd': '',
+      'apn_username': '',//非必须
       'groups': [1,2,3],//非必须，群组的id
     }
   返回data结构：
@@ -51,13 +54,8 @@ def register(request):
     data = json.loads(request.POST.get('data', '{}'))
     form = Register_form(data)
     if form.is_valid():
-      if User.objects.filter(apn_username__iexact=data['apn_username']):
-        return HttpResponse(json.dumps({
-          'success': False,
-          'resultMsg': '该手机已注册过，请勿重复注册',
-        }))
       # 验证通过，存储用户并登陆，同时返回sessionid
-      user = _fn.create_user(username=data['username'], password=data['password'], studentId=data['studentId'], apn_username=data['apn_username'], groups=data.get('groups', []))
+      user = _fn.create_user(username=data['username'], password=data['password'], studentId=data['studentId'], apn_username=data.get('apn_username', ''), groups=data.get('groups', []))
       atschool = pm.AtSchool(userId=user,mygdufs_pwd=data['mygdufs_pwd'])
       atschool.save()
       # 登录
@@ -84,6 +82,7 @@ def login(request, data=None):
     {
       'username':'',
       'password': '',
+      'apn_username': '',
     }
   返回data结构：
     {
@@ -112,6 +111,11 @@ def login(request, data=None):
     if form.is_valid():
       auth_login(request, authenticate(username=data.get('username', ''), password=data.get('password', '')))
       user = request.user
+      # 判断是否需要更新apn_username
+      if data.get('apn_username', '') != '':
+        user.apn_username = data['apn_username']
+        user.save()
+      # 登录成功要返回的数据
       result = {
         'success': True,
         'resultMsg': '登录成功',
@@ -154,6 +158,8 @@ def login(request, data=None):
 @apicall_validator('ALL')
 def logout(request, data=None):
   """/api/home/logout/ 退出"""
+  request.user.apn_username = ''
+  request.user.save()
   auth_logout(request)
   return HttpResponse(json.dumps({
     'success': True,
@@ -180,7 +186,20 @@ def info(request, data=None):
     }
   """
   user = request.user
-  
+  if request.method == 'GET':
+    # 读取用户数据并返回
+    return HttpResponse(json.dumps({
+      'success': True,
+      'resultMsg': '读取成功',
+      'username': user.username,
+      'studentId': user.studentId,
+      'data': {
+        'email': user.email,
+        'truename': user.truename,
+        'phone': user.phone,
+        'cornet': user.cornet,
+        'qq': user.qq,
+      }}))
   # 保存表单数据
   form = Info_form(data=data, user=user)
   if form.is_valid():
@@ -191,6 +210,10 @@ def info(request, data=None):
     user.phone = data['phone']
     user.cornet = data['cornet']
     user.qq = data['qq']
+    if request.user.is_authenticated(): 
+      return HttpResponse('is auth')
+    else:
+      return HttpResponse('not auth')
     user.save()
     return HttpResponse(json.dumps({
       'success': True,
@@ -204,11 +227,71 @@ def info(request, data=None):
     }))
 
 @apicall_validator('ALL')
-def atschool(request, data=None):
-  """/api/home/atschool/ 在校相关
-  GET: 返回用户在校相关数据formData
-  POST: 保存成功则返回success=True，表单验证失败则返回formErrors
+def group(request, data=None):
+  """/home/group/ 我的团体，GET则返回该登录用户参加的团体，POST则将该用户加入到某个团体
+  
+  GET=>
+  返回data格式：
+  {
+    'success': True,
+    'resultMsg': '成功获取团体信息',
+    'group': [
+      {
+        'id': 0,
+        'name': '',
+        'timestamp': '',
+        'member': [
+          {
+            'id': 0,
+            'username': '',
+            'apn_enabled': false,
+          },
+        ],
+      },
+    ],
+  }
+  POST=>
+  接收data格式：
+  {
+    'id': 0,
+    'name': '',
+  }
+  返回data格式：
+  {
+    'success': True,
+    'resultMsg': '成功加入' + groupname,
+  }
   """
   if request.method == 'GET':
-    pm_atschool = pm.AtSchool.objects.get(userId=request.user)
-  return HttpResponse('{}')
+    # 读取该用户所属团体
+    return HttpResponse(json.dumps({
+      'success': True,
+      'resultMsg': '成功获取团体信息',
+      'group': getJsonFromGroups(request.user.groups.all()),
+    }))
+  else:
+    # 将用户添加到团体
+    return HttpResponse('{}')
+
+def getJsonFromUsers(users):
+  """将查询到的用户数组转换为json格式，被getJsonFromGroups()调用"""
+  result = []
+  for u in users:
+    result.append({
+      'id': u.id,
+      'username': u.username,
+      'apn_enabled': False if u.apn_username == None or u.apn_username == '' else true,
+    })
+  return result
+
+def getJsonFromGroups(groups):
+  """将查询到的用户所属group转换为json格式"""
+  result = []
+  for g in groups:
+    result.append({
+      'id': g.id,
+      'name': g.name,
+      'timestamp': str(g.timestamp),
+      'member': getJsonFromUsers(g.user_set.all()),
+    })
+  return result

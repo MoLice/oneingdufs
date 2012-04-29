@@ -23,7 +23,8 @@ from oneingdufs import settings
 # @param {String} password 密码，必须
 # @param {String} studentId 学号，必须
 # @param {String} apn_username 在apn服务器注册的用户名
-# @param **kwargs email|is_staff|is_active|is_superuser|phone|cornet|qq|groups
+# @param {Array<Number>} groups 群组id数组
+# @param **kwargs email|is_staff|is_active|is_superuser|phone|cornet|qq
 # @return {User} 返回创建成功的用户对象
 def create_user(username, password, studentId, apn_username, **kwargs):
   now = datetime.datetime.now()
