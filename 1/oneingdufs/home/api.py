@@ -280,7 +280,7 @@ def getJsonFromUsers(users):
     result.append({
       'id': u.id,
       'username': u.username,
-      'apn_enabled': False if u.apn_username == None or u.apn_username == '' else true,
+      'apn_enabled': False if u.apn_username == None or u.apn_username == '' else True,
     })
   return result
 
